@@ -39,6 +39,12 @@ def filter_recipes(recipes: dict[str, dict]) -> list[dict]:
     for key, value in recipes.items():
         if is_valid_recipe(value):
             valid_recipes.append(value)
+    
+
+    ## check against StatCan
+    
+    ## log the number of valid recipes
+    print(f"Found {len(valid_recipes)} valid recipes")
     return valid_recipes
 
 def seed_recipes() -> list[dict]:
