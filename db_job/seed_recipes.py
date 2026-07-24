@@ -3,6 +3,21 @@ import string
 
 MEALDB_API = "https://www.themealdb.com/api/json/v1/1/"
 
+
+def contains_n_ingredients(recipe: dict, n: int) -> bool:
+    """Check if a recipe has at least n ingredients."""
+    count = 0
+    for key, value in recipe.items():
+        if key.startswith("strIngredient"):
+            count += 1
+        if count >= n:
+            return True
+    return False
+
+def is_valid_recipe(recipe: dict) -> bool:
+    """Check if a recipe has valid metadata."""
+    return contains_n_ingredients(recipe, 3) and recipe.get("strMeal") and recipe.get("strIngredient1") and recipe.get("strMeasure1") and recipe.get("strInstructions") and recipe.get("strMealThumb")
+
 def fetch_recipes() -> dict[str, dict]:
     """Fetch every meal TheMealDB exposes via letter search. """
     recipes: dict[str, dict[str, str]] = {}
@@ -22,7 +37,7 @@ def filter_recipes(recipes: dict[str, dict]) -> list[dict]:
     valid_recipes: list[dict] = []
 
     for key, value in recipes.items():
-        if value.get("strMeal") and value.get("strIngredient1") and value.get("strMeasure1") and value.get("strInstructions") and value.get("strMealThumb"):
+        if is_valid_recipe(value):
             valid_recipes.append(value)
     return valid_recipes
 
@@ -30,5 +45,8 @@ def seed_recipes() -> list[dict]:
     """Seed the database with recipes."""
     recipes = fetch_recipes()
     valid_recipes = filter_recipes(recipes)
+
+    ## add to database
+
     return valid_recipes
 
