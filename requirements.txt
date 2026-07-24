@@ -1,0 +1,5 @@
+- sqlalchemy
+- sqlalchemy-utils
+- fastapi
+- uvicorn
+- alembic
