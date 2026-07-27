@@ -41,7 +41,7 @@ def filter_recipes(recipes: dict[str, dict]) -> list[dict]:
             valid_recipes.append(value)
     
 
-    ## check against StatCan
+    ## check against StatCan ingredient data 
     
     ## log the number of valid recipes
     print(f"Found {len(valid_recipes)} valid recipes")
