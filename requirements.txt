@@ -2,4 +2,7 @@
 - sqlalchemy-utils
 - fastapi
 - uvicorn
-- alembic
+- python-dotenv
+- psycopg[binary]
+- playwright
+- requests
