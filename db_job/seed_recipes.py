@@ -60,8 +60,16 @@ def seed_recipes() -> list[dict]:
 
     ## add to database
 
-    return valid_recipes
+    return (valid_recipes, len(valid_recipes))
 
 
 if __name__ == "__main__":
-    print(seed_recipes())
+    (valid_recipes, num_recipes) = seed_recipes()
+    print(f"Found {num_recipes} valid recipes")
+
+    ingredients: set[str] = set()
+    for recipe in valid_recipes:
+        for ingredient in recipe["ingredients"]:
+            ingredients.add(ingredient.lower().strip())
+    
+    print(f"Found {len(ingredients)} unique ingredients")
