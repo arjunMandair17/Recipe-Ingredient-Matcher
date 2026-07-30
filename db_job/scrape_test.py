@@ -97,4 +97,5 @@ def scrape_with_api(query: str, test_mode: bool = False) -> float | None:
 
 
 if __name__ == "__main__":
-    scrape_with_api("milk", test_mode=True)
+    query = " ".join(sys.argv[1:]) or "milk"
+    print(f"Mean price for {query}: {scrape_with_api(query, test_mode=True)}")
