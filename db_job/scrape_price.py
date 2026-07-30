@@ -10,11 +10,13 @@ from playwright.sync_api import sync_playwright
 
 PRICE_RE = re.compile(r"\$\s*(\d+(?:\.\d{1,2})?)")
 DEFAULT_WORKERS = 5
+DEFAULT_N = 10
 
 
-def average_price(ingredient: str) -> float | None:
-    """Search Giant Tiger for an ingredient and return the average listed price."""
+def average_price(ingredient: str, n: int = DEFAULT_N) -> float | None:
+    """Search Giant Tiger and average up to n matching product-tile prices."""
     url = f"https://www.gianttiger.com/search?q={quote_plus(ingredient)}&type=product"
+    query = ingredient.casefold()
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -29,16 +31,24 @@ def average_price(ingredient: str) -> float | None:
         page.goto(url, wait_until="domcontentloaded", timeout=60_000)
         page.wait_for_timeout(5_000)
 
-        body = page.locator("body").inner_text()
+        if "Access Denied" in page.locator("body").inner_text():
+            browser.close()
+            raise RuntimeError("Giant Tiger blocked this request (bot protection). ")
+
+        prices: list[float] = []
+        for tile in page.locator("article.product-tile").all():
+            if len(prices) >= n:
+                break
+            title = tile.locator(".product-tile__title").inner_text().casefold()
+            if query not in title:
+                continue
+            text = tile.locator(".price__value").first.inner_text()
+            match = PRICE_RE.search(text)
+            if match:
+                prices.append(float(match.group(1)))
+
         browser.close()
 
-    if "Access Denied" in body:
-        raise RuntimeError(
-            "Giant Tiger blocked this request (bot protection). "
-            "Automated scraping is unreliable for production."
-        )
-
-    prices = [float(m) for m in PRICE_RE.findall(body)]
     return mean(prices) if prices else None
 
 
