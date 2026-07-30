@@ -1,23 +1,32 @@
-import requests
-import string
-from scrape_price import scrape_many, average_price
+from scrape_price import average_price, scrape_many
 from scrape_test import scrape_with_api
-from seed_recipes import seed_recipes
 
 
 def get_ingredients(recipe: dict) -> list[str]:
-    """Get ingredients from recipes."""
-
-    ingredients = recipe.get("ingredients")
-    
-    filtered_ingredients = [ingredient.lower().strip() for ingredient in ingredients]
-
-    return filtered_ingredients
+    """Get ingredients from a recipe."""
+    ingredients = recipe.get("ingredients") or []
+    return [ingredient.lower().strip() for ingredient in ingredients]
 
 
-def get_ingredient_prices(ingredients: list[str]) -> list[dict]:
-    """Get prices for ingredients."""
+def get_price(ingredient: str) -> float | None:
+    """Try Algolia first, then Playwright average_price as fallback."""
+    try:
+        price = scrape_with_api(ingredient)
+        if price:
+            return price
+    except Exception as exc:
+        print(f"API failed for {ingredient!r}: {exc}")
 
-    prices = scrape_many(ingredients, function=scrape_with_api)
+    try:
+        price = average_price(ingredient)
+        if price:
+            return price
+    except Exception as exc:
+        print(f"Playwright failed for {ingredient!r}: {exc}")
 
-    return prices
+    return None
+
+
+def get_ingredient_prices(ingredients: list[str]) -> dict[str, float | None]:
+    """Get prices for ingredients (API with Playwright fallback)."""
+    return scrape_many(ingredients, function=get_price)

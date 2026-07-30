@@ -3,6 +3,7 @@
 import json
 import sys
 from statistics import mean
+
 import requests
 
 URL = "https://ngmhtyxt0t-3.algolianet.com/1/indexes/*/queries"
@@ -47,18 +48,18 @@ PAYLOAD = {
 
 
 def scrape_with_api(query: str, test_mode: bool = False) -> float | None:
-    """POST the Algolia multi-query and print product name/price hits."""
+    """POST the Algolia multi-query and return the mean hit price."""
     PAYLOAD["requests"][0]["query"] = query
 
     resp = requests.post(URL, params=PARAMS, json=PAYLOAD, timeout=30)
-    print("status:", resp.status_code)
+    print("status:", resp.status_code) if test_mode else None
     resp.raise_for_status()
 
     data = resp.json()
     results = data.get("results") or []
     if not results:
         print("no results key:", json.dumps(data, indent=2)[:2000]) if test_mode else None
-        return {"name": query, "price": None}
+        return None
 
     hits = results[0].get("hits") or []
     print(f"hits: {len(hits)} (nbHits={results[0].get('nbHits')})") if test_mode else None
@@ -68,16 +69,15 @@ def scrape_with_api(query: str, test_mode: bool = False) -> float | None:
 
     prices: list[float] = []
     for hit in hits[:10]:
-
         name = hit.get("title") or hit.get("name") or hit.get("product_type")
         price = hit.get("price")
         vendor = hit.get("vendor")
         handle = hit.get("handle")
 
-        prices.append(float(price))
+        if price is not None:
+            prices.append(float(price))
 
         if test_mode:
-
             print(
                 f"- {_safe(name)!r} | price={price} | "
                 f"vendor={_safe(vendor)} | handle={_safe(handle)}"
@@ -90,10 +90,7 @@ def scrape_with_api(query: str, test_mode: bool = False) -> float | None:
         sample = json.dumps(hits[0], indent=2, default=str)[:2500]
         print(sample.encode("ascii", "replace").decode("ascii"))
 
-
     return mean(prices) if prices else None
-
-    
 
 
 if __name__ == "__main__":
