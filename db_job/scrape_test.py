@@ -2,7 +2,7 @@
 
 import json
 import sys
-
+from statistics import mean
 import requests
 
 URL = "https://ngmhtyxt0t-3.algolianet.com/1/indexes/*/queries"
@@ -46,9 +46,8 @@ PAYLOAD = {
 }
 
 
-def main() -> None:
+def scrape_with_api(query: str, test_mode: bool = False) -> float | None:
     """POST the Algolia multi-query and print product name/price hits."""
-    query = " ".join(sys.argv[1:]) or "milk"
     PAYLOAD["requests"][0]["query"] = query
 
     resp = requests.post(URL, params=PARAMS, json=PAYLOAD, timeout=30)
@@ -58,26 +57,33 @@ def main() -> None:
     data = resp.json()
     results = data.get("results") or []
     if not results:
-        print("no results key:", json.dumps(data, indent=2)[:2000])
-        return
+        print("no results key:", json.dumps(data, indent=2)[:2000]) if test_mode else None
+        return {"name": query, "price": None}
 
     hits = results[0].get("hits") or []
-    print(f"hits: {len(hits)} (nbHits={results[0].get('nbHits')})")
+    print(f"hits: {len(hits)} (nbHits={results[0].get('nbHits')})") if test_mode else None
 
     def _safe(value: object) -> str:
         return str(value).encode("ascii", "replace").decode("ascii")
 
+    prices: list[float] = []
     for hit in hits[:10]:
+
         name = hit.get("title") or hit.get("name") or hit.get("product_type")
         price = hit.get("price")
         vendor = hit.get("vendor")
         handle = hit.get("handle")
-        print(
-            f"- {_safe(name)!r} | price={price} | "
-            f"vendor={_safe(vendor)} | handle={_safe(handle)}"
-        )
 
-    if hits:
+        prices.append(float(price))
+
+        if test_mode:
+
+            print(
+                f"- {_safe(name)!r} | price={price} | "
+                f"vendor={_safe(vendor)} | handle={_safe(handle)}"
+            )
+
+    if hits and test_mode:
         print("\n--- sample hit keys ---")
         print(sorted(hits[0].keys()))
         print("\n--- sample hit (truncated) ---")
@@ -85,5 +91,10 @@ def main() -> None:
         print(sample.encode("ascii", "replace").decode("ascii"))
 
 
+    return mean(prices) if prices else None
+
+    
+
+
 if __name__ == "__main__":
-    main()
+    scrape_with_api("milk", test_mode=True)

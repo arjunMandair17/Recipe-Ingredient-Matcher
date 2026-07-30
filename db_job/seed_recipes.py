@@ -25,7 +25,7 @@ def fetch_recipes() -> dict[str, dict]:
         response: requests.Response = requests.get(f"{MEALDB_API}search.php?f={letter}")
         response.raise_for_status()
 
-        meals = response.json()["meals"]
+        meals = response.json().get("meals") or []
 
         for meal in meals:
             recipes[meal["idMeal"]] = meal ## stores the meal data with it's id as the key
@@ -38,7 +38,15 @@ def filter_recipes(recipes: dict[str, dict]) -> list[dict]:
 
     for key, value in recipes.items():
         if is_valid_recipe(value):
-            valid_recipes.append(value)
+        
+            recipe = {
+                "id": key,
+                "name": value.get("strMeal") or "",
+                "ingredients": [value.get(f"strIngredient{i}") for i in range(1, 21) if value.get(f"strIngredient{i}")],
+                "instructions": value.get("strInstructions") or "",
+                "image": value.get("strMealThumb") or ""
+            }
+            valid_recipes.append(recipe)
     
     
     ## log the number of valid recipes
@@ -54,3 +62,6 @@ def seed_recipes() -> list[dict]:
 
     return valid_recipes
 
+
+if __name__ == "__main__":
+    print(seed_recipes())

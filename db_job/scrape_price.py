@@ -5,8 +5,10 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from statistics import mean
 from urllib.parse import quote_plus
-
+from typing import Callable
 from playwright.sync_api import sync_playwright
+from scrape_test import scrape_with_api
+
 
 PRICE_RE = re.compile(r"\$\s*(\d+(?:\.\d{1,2})?)")
 DEFAULT_WORKERS = 5
@@ -53,13 +55,13 @@ def average_price(ingredient: str, n: int = DEFAULT_N) -> float | None:
 
 
 def scrape_many(
-    ingredients: list[str], workers: int = DEFAULT_WORKERS
+    ingredients: list[str], workers: int = DEFAULT_WORKERS, function: callable = scrape_with_api
 ) -> dict[str, float | None]:
     """Scrape average prices for many ingredients using a thread pool."""
     results: dict[str, float | None] = {}
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        futures = {pool.submit(average_price, item): item for item in ingredients}
+        futures = {pool.submit(function, item): item for item in ingredients}
         for future in as_completed(futures):
             item = futures[future]
             try:
