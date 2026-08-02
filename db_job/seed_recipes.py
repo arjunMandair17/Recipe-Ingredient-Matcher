@@ -25,7 +25,7 @@ def fetch_recipes() -> dict[str, dict]:
         response: requests.Response = requests.get(f"{MEALDB_API}search.php?f={letter}")
         response.raise_for_status()
 
-        meals = response.json()["meals"]
+        meals = response.json().get("meals") or []
 
         for meal in meals:
             recipes[meal["idMeal"]] = meal ## stores the meal data with it's id as the key
@@ -38,10 +38,16 @@ def filter_recipes(recipes: dict[str, dict]) -> list[dict]:
 
     for key, value in recipes.items():
         if is_valid_recipe(value):
-            valid_recipes.append(value)
+        
+            recipe = {
+                "id": key,
+                "name": value.get("strMeal") or "",
+                "ingredients": [value.get(f"strIngredient{i}") for i in range(1, 21) if value.get(f"strIngredient{i}")],
+                "instructions": value.get("strInstructions") or "",
+                "image": value.get("strMealThumb") or ""
+            }
+            valid_recipes.append(recipe)
     
-
-    ## check against StatCan
     
     ## log the number of valid recipes
     print(f"Found {len(valid_recipes)} valid recipes")
@@ -54,5 +60,16 @@ def seed_recipes() -> list[dict]:
 
     ## add to database
 
-    return valid_recipes
+    return (valid_recipes, len(valid_recipes))
 
+
+if __name__ == "__main__":
+    (valid_recipes, num_recipes) = seed_recipes()
+    print(f"Found {num_recipes} valid recipes")
+
+    ingredients: set[str] = set()
+    for recipe in valid_recipes:
+        for ingredient in recipe["ingredients"]:
+            ingredients.add(ingredient.lower().strip())
+    
+    print(f"Found {len(ingredients)} unique ingredients")
