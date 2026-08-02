@@ -22,7 +22,6 @@ class Ingredient(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String)
     price: Mapped[float | None] = mapped_column(Float, nullable=True)
-    price_url: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class RecipeIngredient(Base):
@@ -34,5 +33,4 @@ class RecipeIngredient(Base):
     ingredient_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("ingredients.id"), primary_key=True
     )
-    quantity: Mapped[float | None] = mapped_column(Float, nullable=True)
-    unit: Mapped[str | None] = mapped_column(String, nullable=True)
+    measure: Mapped[str | None] = mapped_column(String, nullable=True)

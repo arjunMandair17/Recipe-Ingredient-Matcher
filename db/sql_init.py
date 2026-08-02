@@ -1,4 +1,5 @@
 import os
+from contextlib import contextmanager
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
@@ -22,6 +23,7 @@ def init_db() -> None:
     Base.metadata.create_all(bind=engine)
 
 
+@contextmanager
 def get_session():
     """Yield a DB session and close it afterward."""
     session = Session()

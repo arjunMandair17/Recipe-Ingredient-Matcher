@@ -1,5 +1,7 @@
 import requests
 import string
+from db.sql_init import get_session
+from db.db_models import Recipe
 
 MEALDB_API = "https://www.themealdb.com/api/json/v1/1/"
 
@@ -44,7 +46,8 @@ def filter_recipes(recipes: dict[str, dict]) -> list[dict]:
                 "name": value.get("strMeal") or "",
                 "ingredients": [value.get(f"strIngredient{i}") for i in range(1, 21) if value.get(f"strIngredient{i}")],
                 "instructions": value.get("strInstructions") or "",
-                "image": value.get("strMealThumb") or ""
+                "image": value.get("strMealThumb") or "",
+                "measures": [value.get(f"strMeasure{i}") for i in range(1, 21) if value.get(f"strMeasure{i}")]
             }
             valid_recipes.append(recipe)
     
@@ -58,7 +61,18 @@ def seed_recipes() -> list[dict]:
     recipes = fetch_recipes()
     valid_recipes = filter_recipes(recipes)
 
-    ## add to database
+    ## add recipes to database
+    with get_session() as session:
+        for recipe in valid_recipes:
+            session.add(Recipe(
+                api_id=recipe["id"],
+                name=recipe["name"],
+                image_url=recipe["image"],
+                instructions=recipe["instructions"]
+            ))
+            
+        session.commit()
+    
 
     return (valid_recipes, len(valid_recipes))
 
