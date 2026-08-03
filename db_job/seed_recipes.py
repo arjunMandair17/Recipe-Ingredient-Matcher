@@ -2,6 +2,7 @@ import requests
 import string
 from db.sql_init import get_session
 from db.db_models import Recipe
+from sqlalchemy import select
 
 MEALDB_API = "https://www.themealdb.com/api/json/v1/1/"
 
@@ -63,6 +64,12 @@ def seed_recipes() -> list[dict]:
 
     ## add recipes to database
     with get_session() as session:
+        extra_recipes = get_extra_recipes(valid_recipes)
+
+        if extra_recipes is not None: ## if there are new recipes, insert them instead of the old ones
+            print("MealDB has new recipes that are not in the database.")
+            valid_recipes = extra_recipes
+
         for recipe in valid_recipes:
             session.add(Recipe(
                 api_id=recipe["id"],
@@ -75,6 +82,12 @@ def seed_recipes() -> list[dict]:
     
 
     return (valid_recipes, len(valid_recipes))
+
+def get_extra_recipes(recipes: list[dict]) -> list[dict]:
+    """Check if the recipes are already seeded, returns recipes that are not in the database."""
+    with get_session() as session:
+        result = session.execute(select(Recipe).where(Recipe.api_id.in_([recipe["id"] for recipe in recipes])))
+        return [recipe for recipe in recipes if recipe["id"] not in result]
 
 
 if __name__ == "__main__":

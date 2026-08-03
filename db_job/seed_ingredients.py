@@ -1,7 +1,7 @@
 from scrape_raw import average_price, scrape_many
 from scrape_api import scrape_with_api
 from sqlalchemy import select
-
+from datetime import datetime
 from db.sql_init import get_session
 from db.db_models import Ingredient, Recipe, RecipeIngredient
 
@@ -36,33 +36,46 @@ def get_ingredient_prices(ingredients: list[str]) -> dict[str, float | None]:
     return scrape_many(ingredients, function=get_price)
 
 
-def seed_ingredients(recipes: list[dict]) -> tuple[dict[str, float | None], int]:
+def seed_ingredients(recipes: list[dict]) -> tuple[dict[str, float | None], int, int]:
     """Seed the database with unique ingredients and recipe links."""
     ingredients = set()
     for recipe in recipes:
         ingredients.update(get_ingredients(recipe))  ## adds all ingredients from the current recipe
-    prices = get_ingredient_prices(list(ingredients))
+    prices = get_ingredient_prices(list(ingredients)) ## scrape prices for all
+    scrape_count = len(prices) ## number of ingredients that were scraped successfully
 
-    ## add ingredients to database (one flush for all IDs)
+    if not ingredients:
+        return (prices, 0, scrape_count)
+
     with get_session() as session:
-        rows = [
-            Ingredient(name=name, price=prices[name])
-            for name in ingredients
-        ]
-        session.add_all(rows)
+        existing = {
+            row.name: row
+            for row in session.scalars(
+                select(Ingredient).where(Ingredient.name.in_(ingredients))
+            ).all()
+        }
+
+        now = datetime.now()
+        for name in ingredients:
+            if name in existing:
+                existing[name].price = prices[name]
+                existing[name].last_scraped = now
+            else:
+                row = Ingredient(name=name, price=prices[name], last_scraped=now)
+                session.add(row)
+                existing[name] = row
+
         session.flush()
-        ingredient_ids = {row.name: row.id for row in rows}
-        session.commit()
+        ingredient_ids = {name: row.id for name, row in existing.items()}
 
-    ## add ingredient connections to database
-    with get_session() as session:
-        # one query: MealDB api_id -> postgres recipe.id
+        ## only add links for recipes that do not already have connections
         recipe_ids = dict(session.execute(select(Recipe.api_id, Recipe.id)).all())
+        linked = set(session.scalars(select(RecipeIngredient.recipe_id)).all())
 
         links = []
         for recipe in recipes:
             recipe_id = recipe_ids.get(recipe["id"])
-            if recipe_id is None:
+            if recipe_id is None or recipe_id in linked:
                 continue
 
             measures = recipe.get("measures") or []
@@ -78,4 +91,4 @@ def seed_ingredients(recipes: list[dict]) -> tuple[dict[str, float | None], int]
         session.add_all(links)
         session.commit()
 
-    return (prices, len(ingredients))
+    return (prices, len(ingredients), scrape_count)

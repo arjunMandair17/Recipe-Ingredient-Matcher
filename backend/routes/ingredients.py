@@ -5,7 +5,7 @@ ingredients_router = APIRouter(prefix="/ingredients", tags=["ingredients"])
 
 @ingredients_router.get("/")
 async def get_ingredients(ingredient_request: IngredientRequest) -> IngredientResponse:
-    # search for the ingredient in the database
+    # return all ingredients from the database
 
     return IngredientResponse(
         id=1,
