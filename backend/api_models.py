@@ -2,8 +2,6 @@ from pydantic import BaseModel
 
 class IngredientRequest(BaseModel):
     name: str
-    quantity: float
-    unit: str
 
 
 class IngredientResponse(BaseModel):
