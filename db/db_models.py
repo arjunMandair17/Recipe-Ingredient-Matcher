@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Float, ForeignKey, DateTime
 
+
 class Base(DeclarativeBase):
     pass
 
@@ -21,9 +22,11 @@ class Ingredient(Base):
     __tablename__ = "ingredients"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String)
+    name: Mapped[str] = mapped_column(String, unique=True)
     price: Mapped[float | None] = mapped_column(Float, nullable=True)
-    last_scraped: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    last_scraped: Mapped[datetime] = mapped_column(
+        DateTime, default=lambda: datetime.now()
+    )
 
 
 class RecipeIngredient(Base):
