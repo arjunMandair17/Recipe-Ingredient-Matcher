@@ -1,15 +1,19 @@
-from pydantic import BaseModel
+from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict
+
 
 class IngredientRequest(BaseModel):
     name: str
 
 
 class IngredientResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
     name: str
-    price: float
-    price_url: str
-    quantity: float
-    unit: str
+    price: float | None
+    last_scraped: datetime | None = None
 
 
 class RecipeRequest(BaseModel):
@@ -18,9 +22,12 @@ class RecipeRequest(BaseModel):
     image_url: str
     instructions: str
 
+
 class RecipeResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     name: str
     image_url: str
     instructions: str
-    ingredients: list[IngredientResponse]
+    ingredients: list[IngredientResponse] = []
