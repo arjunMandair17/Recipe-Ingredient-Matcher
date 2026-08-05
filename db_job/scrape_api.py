@@ -2,11 +2,16 @@
 
 import json
 import sys
+import time
+from copy import deepcopy
+import os
 from statistics import mean
 
 import requests
 
 URL = "https://ngmhtyxt0t-3.algolianet.com/1/indexes/*/queries"
+REQUEST_DELAY = os.getenv("REQUEST_DELAY")
+MAX_RETRIES = os.getenv("MAX_RETRIES")
 PARAMS = {
     "x-algolia-agent": "Algolia for JavaScript (5.49.1); Lite (5.49.1); Browser",
     "x-algolia-api-key": "1ec86e7ee6661988fb72e0c843badcd8",
@@ -49,9 +54,20 @@ PAYLOAD = {
 
 def scrape_with_api(query: str, test_mode: bool = False) -> float | None:
     """POST the Algolia multi-query and return the mean hit price."""
-    PAYLOAD["requests"][0]["query"] = query
+    payload = deepcopy(PAYLOAD)
+    payload["requests"][0]["query"] = query
 
-    resp = requests.post(URL, params=PARAMS, json=PAYLOAD, timeout=30)
+    ## Retry logic in case of 429 Too Many Requests
+    for attempt in range(MAX_RETRIES + 1):
+        time.sleep(REQUEST_DELAY)
+        resp = requests.post(URL, params=PARAMS, json=payload, timeout=30)
+        if resp.status_code != 429 or attempt == MAX_RETRIES:
+            break
+
+        retry_after = resp.headers.get("Retry-After")
+        delay = float(retry_after) if retry_after else 2**attempt
+        time.sleep(delay)
+
     print("status:", resp.status_code) if test_mode else None
     resp.raise_for_status()
 

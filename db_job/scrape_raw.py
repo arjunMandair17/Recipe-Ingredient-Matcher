@@ -6,12 +6,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from statistics import mean
 from urllib.parse import quote_plus
 from typing import Callable
-
+import os
 from playwright.sync_api import sync_playwright
 
 PRICE_RE = re.compile(r"\$\s*(\d+(?:\.\d{1,2})?)")
-DEFAULT_WORKERS = 5
-DEFAULT_N = 10
+DEFAULT_WORKERS = os.getenv("DEFAULT_WORKERS")
+DEFAULT_N = os.getenv("SEARCH_LIMIT")
 
 
 def average_price(ingredient: str, n: int = DEFAULT_N) -> float | None:
@@ -60,22 +60,29 @@ def scrape_many(
 ) -> dict[str, float | None]:
     """Scrape prices for many ingredients using a thread pool."""
     results: dict[str, float | None] = {}
+    total = len(ingredients)
+    done = 0
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
         futures = {pool.submit(function, item): item for item in ingredients}
         for future in as_completed(futures):
             item = futures[future]
+            done += 1
             try:
                 results[item] = future.result()
             except Exception as exc:  # noqa: BLE001 - surface per-item failures
                 results[item] = None
-                print(f"{item}: ERROR {exc}", flush=True)
+                print(f'ingredient "{item}" {done}/{total}: ERROR {exc}', flush=True)
             else:
                 avg = results[item]
                 if avg is None:
-                    print(f"{item}: no prices", flush=True)
+                    print(f'ingredient "{item}" {done}/{total}: no prices', flush=True)
                 else:
-                    print(f"{item}: ${avg:.2f} avg", flush=True)
+                    print(
+                        f'ingredient "{item}" {done}/{total} scraped successfully '
+                        f"(${avg:.2f})",
+                        flush=True,
+                    )
 
     return results
 

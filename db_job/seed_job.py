@@ -1,10 +1,6 @@
 from seed_recipes import seed_recipes
 from seed_ingredients import seed_ingredients
 
-from db.sql_init import get_session
-from db.db_models import Recipe, Ingredient, RecipeIngredient
-from sqlalchemy import select
-
 
 
 
