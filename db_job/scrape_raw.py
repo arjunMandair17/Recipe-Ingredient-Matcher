@@ -8,7 +8,9 @@ from urllib.parse import quote_plus
 from typing import Callable
 import os
 from playwright.sync_api import sync_playwright
+from dotenv import load_dotenv
 
+load_dotenv()
 PRICE_RE = re.compile(r"\$\s*(\d+(?:\.\d{1,2})?)")
 DEFAULT_WORKERS = os.getenv("DEFAULT_WORKERS")
 DEFAULT_N = os.getenv("SEARCH_LIMIT")
