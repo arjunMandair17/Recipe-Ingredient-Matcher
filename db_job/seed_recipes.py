@@ -48,7 +48,8 @@ def filter_recipes(recipes: dict[str, dict]) -> list[dict]:
                 "ingredients": [value.get(f"strIngredient{i}") for i in range(1, 21) if value.get(f"strIngredient{i}")],
                 "instructions": value.get("strInstructions") or "",
                 "image": value.get("strMealThumb") or "",
-                "measures": [value.get(f"strMeasure{i}") for i in range(1, 21) if value.get(f"strMeasure{i}")]
+                ## kept index-aligned with ingredients so measures pair correctly
+                "measures": [value.get(f"strMeasure{i}") for i in range(1, 21) if value.get(f"strIngredient{i}")]
             }
             valid_recipes.append(recipe)
     

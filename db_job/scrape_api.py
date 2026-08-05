@@ -37,14 +37,8 @@ PAYLOAD = {
                 "meta.english.grocery_product",
                 "meta.info.store_inventory",
             ],
-            "filters": "named_tags.shippable:true OR named_tags.mms_province_code:ON",
+            "filters": "named_tags.mms_province_code:ON",
             "facetFilters": [],
-            "numericFilters": [
-                [
-                    "meta.info.store_inventory.64619348029 >= 1",
-                    "meta.info.store_inventory.online >= 1",
-                ]
-            ],
             "hitsPerPage": 30,
             "page": 0,
             "distinct": 1,

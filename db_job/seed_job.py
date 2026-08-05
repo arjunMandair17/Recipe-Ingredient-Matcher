@@ -1,5 +1,5 @@
-from seed_recipes import seed_recipes
-from seed_ingredients import seed_ingredients
+from .seed_recipes import seed_recipes
+from .seed_ingredients import seed_ingredients
 
 
 

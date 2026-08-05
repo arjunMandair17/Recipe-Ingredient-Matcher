@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 PRICE_RE = re.compile(r"\$\s*(\d+(?:\.\d{1,2})?)")
-DEFAULT_WORKERS = os.getenv("DEFAULT_WORKERS")
-DEFAULT_N = os.getenv("SEARCH_LIMIT")
+DEFAULT_WORKERS = int(os.getenv("DEFAULT_WORKERS", "2"))
+DEFAULT_N = int(os.getenv("SEARCH_LIMIT", "10"))
 
 
 def average_price(ingredient: str, n: int = DEFAULT_N) -> float | None:

@@ -1,5 +1,5 @@
-from scrape_raw import average_price, scrape_many
-from scrape_api import scrape_with_api
+from .scrape_raw import average_price, scrape_many
+from .scrape_api import scrape_with_api
 from sqlalchemy import select
 from datetime import datetime
 from db.sql_init import get_session
@@ -67,6 +67,7 @@ def seed_ingredients(recipes: list[dict]) -> tuple[dict[str, float | None], int,
 
         session.flush()
         ingredient_ids = {name: row.id for name, row in existing.items()}
+        session.commit()  ## keep the scraped prices even if linking fails
 
         ## only add links for recipes that do not already have connections
         recipe_ids = dict(session.execute(select(Recipe.api_id, Recipe.id)).all())
@@ -79,7 +80,11 @@ def seed_ingredients(recipes: list[dict]) -> tuple[dict[str, float | None], int,
                 continue
 
             measures = recipe.get("measures") or []
+            seen = set()  ## a recipe can list the same ingredient twice
             for i, name in enumerate(get_ingredients(recipe)):
+                if name in seen:
+                    continue
+                seen.add(name)
                 links.append(
                     RecipeIngredient(
                         recipe_id=recipe_id,
