@@ -62,14 +62,11 @@ def seed_recipes() -> list[dict]:
     recipes = fetch_recipes()
     valid_recipes = filter_recipes(recipes)
 
-    ## add recipes to database
+    ## only insert recipes that are not already in the database
+    valid_recipes = get_extra_recipes(valid_recipes)
+    print(f"{len(valid_recipes)} recipes are not in the database yet")
+
     with get_session() as session:
-        extra_recipes = get_extra_recipes(valid_recipes)
-
-        if extra_recipes is not None: ## if there are new recipes, insert them instead of the old ones
-            print("MealDB has new recipes that are not in the database.")
-            valid_recipes = extra_recipes
-
         for recipe in valid_recipes:
             session.add(Recipe(
                 api_id=recipe["id"],
@@ -85,9 +82,18 @@ def seed_recipes() -> list[dict]:
 
 def get_extra_recipes(recipes: list[dict]) -> list[dict]:
     """Check if the recipes are already seeded, returns recipes that are not in the database."""
+    if not recipes:
+        return []
+
     with get_session() as session:
-        result = session.execute(select(Recipe).where(Recipe.api_id.in_([recipe["id"] for recipe in recipes])))
-        return [recipe for recipe in recipes if recipe["id"] not in result]
+        seeded = set(
+            session.scalars(
+                select(Recipe.api_id).where(
+                    Recipe.api_id.in_([recipe["id"] for recipe in recipes])
+                )
+            ).all()
+        )
+        return [recipe for recipe in recipes if recipe["id"] not in seeded]
 
 
 if __name__ == "__main__":

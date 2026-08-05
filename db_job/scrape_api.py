@@ -5,20 +5,23 @@ import sys
 import time
 from copy import deepcopy
 import os
+from dotenv import load_dotenv
 from statistics import mean
 
 import requests
 
-URL = "https://ngmhtyxt0t-3.algolianet.com/1/indexes/*/queries"
-REQUEST_DELAY = os.getenv("REQUEST_DELAY")
-MAX_RETRIES = os.getenv("MAX_RETRIES")
+load_dotenv()
+
+URL = os.getenv("ALGOLIA_URL")
+REQUEST_DELAY = float(os.getenv("REQUEST_DELAY"))
+MAX_RETRIES = int(os.getenv("MAX_RETRIES"))
 PARAMS = {
     "x-algolia-agent": "Algolia for JavaScript (5.49.1); Lite (5.49.1); Browser",
-    "x-algolia-api-key": "1ec86e7ee6661988fb72e0c843badcd8",
-    "x-algolia-application-id": "NGMHTYXT0T",
+    "x-algolia-api-key": os.getenv("ALGOLIA_API_KEY"),
+    "x-algolia-application-id": os.getenv("ALGOLIA_APPLICATION_ID"),
 }
 
-# Minimal clone of the main search request from DevTools (shopify_products / milk).
+# Clone of the main search request from DevTools (shopify_products / milk).
 PAYLOAD = {
     "requests": [
         {
