@@ -4,29 +4,34 @@ from sqlalchemy import select
 from datetime import datetime
 from db.sql_init import get_session
 from db.db_models import Ingredient, Recipe, RecipeIngredient
+from db.normalize import search_query, singularize
 
 
 def get_ingredients(recipe: dict) -> list[str]:
-    """Get ingredients from a recipe."""
+    """Get ingredients from a recipe, normalized to singular form."""
     ingredients = recipe.get("ingredients") or []
-    return [ingredient.lower().strip() for ingredient in ingredients]
+    return [
+        " ".join(singularize(word) for word in ingredient.lower().strip().split())
+        for ingredient in ingredients
+    ]
 
 
 def get_price(ingredient: str) -> float | None:
     """Try Algolia first, then Playwright average_price as fallback."""
+    query = search_query(ingredient)
     try:
-        price = scrape_with_api(ingredient)
+        price = scrape_with_api(query)
         if price is not None:
             return price
     except Exception as exc:
-        print(f"API failed for {ingredient!r}: {exc}")
+        print(f"API failed for {ingredient!r} (query={query!r}): {exc}")
 
     try:
-        price = average_price(ingredient)
+        price = average_price(query)
         if price is not None:
             return price
     except Exception as exc:
-        print(f"Playwright failed for {ingredient!r}: {exc}")
+        print(f"Playwright failed for {ingredient!r} (query={query!r}): {exc}")
 
     return None
 

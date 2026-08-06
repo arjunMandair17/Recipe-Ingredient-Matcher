@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from backend.api_models import (
@@ -9,6 +9,7 @@ from backend.api_models import (
 )
 from db.sql_init import get_session
 from db.db_models import Recipe, Ingredient, RecipeIngredient
+from db.normalize import search_query
 
 
 recipes_router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -51,6 +52,31 @@ def build_recipe_responses(session: Session, recipes: list[Recipe]) -> list[Reci
         )
         for recipe in recipes
     ]
+
+
+def expand_ingredient_ids(session: Session, ingredient_ids: list[int]) -> list[int]:
+    """Expand selected ids to include name variants (e.g. butter → unsalted butter)."""
+    selected = session.scalars(
+        select(Ingredient).where(Ingredient.id.in_(ingredient_ids))
+    ).all()
+    if not selected:
+        return list(ingredient_ids)
+
+    bases = {search_query(ing.name) for ing in selected}
+    bases.discard("")
+    # also match on individual tokens so "king prawn" expands to "prawn"
+    bases.update(
+        token for base in list(bases) for token in base.split() if len(token) > 2
+    )
+    if not bases:
+        return list(ingredient_ids)
+
+    matches = session.scalars(
+        select(Ingredient.id).where(
+            or_(*[Ingredient.name.ilike(f"%{base}%") for base in bases])
+        )
+    ).all()
+    return list({*ingredient_ids, *matches})
 
 
 @recipes_router.get("/", response_model=list[RecipeResponse])
@@ -117,15 +143,16 @@ async def get_recipe(recipe_id: int) -> RecipeResponse:
 async def fetch_recipes_by_ingredients(
     body: RecipeSearchRequest,
 ) -> list[RecipeResponse]:
-    """Fetch recipes that use any of the given ingredient ids."""
+    """Fetch recipes that use any of the given ingredient ids (including name variants)."""
     try:
         with get_session() as session:
+            ingredient_ids = expand_ingredient_ids(session, body.ingredient_ids)
             recipes = session.scalars(
                 select(Recipe)
                 .where(
                     Recipe.id.in_(
                         select(RecipeIngredient.recipe_id).where(
-                            RecipeIngredient.ingredient_id.in_(body.ingredient_ids)
+                            RecipeIngredient.ingredient_id.in_(ingredient_ids)
                         )
                     )
                 )
