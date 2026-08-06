@@ -1,4 +1,5 @@
-from datetime import datetime
+﻿from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -31,6 +32,8 @@ class RecipeResponse(BaseModel):
     image_url: str
     instructions: str
     ingredients: list[IngredientResponse] = []
+    # set by /recipes/search: exact = cleaned name match, partial = variant/head-noun match
+    match_type: Literal["exact", "partial"] | None = None
 
 
 class RecipeSearchRequest(BaseModel):

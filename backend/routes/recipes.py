@@ -64,10 +64,11 @@ def expand_ingredient_ids(session: Session, ingredient_ids: list[int]) -> list[i
 
     bases = {search_query(ing.name) for ing in selected}
     bases.discard("")
-    # also match on individual tokens so "king prawn" expands to "prawn"
-    bases.update(
-        token for base in list(bases) for token in base.split() if len(token) > 2
-    )
+    # head noun only (last token): "king prawn" also matches via "prawn", not "king"
+    for base in list(bases):
+        parts = base.split()
+        if len(parts) > 1 and len(parts[-1]) > 2:
+            bases.add(parts[-1])
     if not bases:
         return list(ingredient_ids)
 
@@ -77,6 +78,24 @@ def expand_ingredient_ids(session: Session, ingredient_ids: list[int]) -> list[i
         )
     ).all()
     return list({*ingredient_ids, *matches})
+
+
+def annotate_match_types(
+    recipes: list[RecipeResponse],
+    selected: list[Ingredient],
+) -> list[RecipeResponse]:
+    """Tag search hits as exact (same cleaned base) or partial (variant / head-noun)."""
+    exact_bases = {search_query(ing.name) for ing in selected}
+    exact_bases.discard("")
+    annotated: list[RecipeResponse] = []
+    for recipe in recipes:
+        is_exact = any(
+            search_query(ing.name) in exact_bases for ing in recipe.ingredients
+        )
+        annotated.append(
+            recipe.model_copy(update={"match_type": "exact" if is_exact else "partial"})
+        )
+    return annotated
 
 
 @recipes_router.get("/", response_model=list[RecipeResponse])
@@ -146,6 +165,9 @@ async def fetch_recipes_by_ingredients(
     """Fetch recipes that use any of the given ingredient ids (including name variants)."""
     try:
         with get_session() as session:
+            selected = session.scalars(
+                select(Ingredient).where(Ingredient.id.in_(body.ingredient_ids))
+            ).all()
             ingredient_ids = expand_ingredient_ids(session, body.ingredient_ids)
             recipes = session.scalars(
                 select(Recipe)
@@ -158,7 +180,10 @@ async def fetch_recipes_by_ingredients(
                 )
                 .order_by(Recipe.name)
             ).all()
-            return build_recipe_responses(session, list(recipes))
+            return annotate_match_types(
+                build_recipe_responses(session, list(recipes)),
+                list(selected),
+            )
     except Exception as e:
         raise HTTPException(
             status_code=500,
