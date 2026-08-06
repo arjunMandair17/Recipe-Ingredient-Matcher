@@ -1,8 +1,12 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from backend.api_models import IngredientResponse, RecipeResponse
+from backend.api_models import (
+    IngredientResponse,
+    RecipeResponse,
+    RecipeSearchRequest,
+)
 from db.sql_init import get_session
 from db.db_models import Recipe, Ingredient, RecipeIngredient
 
@@ -50,18 +54,46 @@ def build_recipe_responses(session: Session, recipes: list[Recipe]) -> list[Reci
 
 
 @recipes_router.get("/", response_model=list[RecipeResponse])
-async def get_recipes() -> list[RecipeResponse]:
-    """Return all recipes ordered by name."""
+async def get_recipes(
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+) -> list[RecipeResponse]:
+    """Return recipes ordered by name, with limit/offset pagination."""
     try:
         with get_session() as session:
-            recipes = session.scalars(select(Recipe).order_by(Recipe.name)).all()
-            if not recipes:
-                raise HTTPException(status_code=404, detail="No recipes found")
+            recipes = session.scalars(
+                select(Recipe).order_by(Recipe.name).limit(limit).offset(offset)
+            ).all()
             return build_recipe_responses(session, list(recipes))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting recipes: {str(e)}")
+
+
+@recipes_router.get("/{recipe_id}/ingredients", response_model=list[IngredientResponse])
+async def get_recipe_ingredients(recipe_id: int) -> list[IngredientResponse]:
+    """Return ingredients for a recipe. 404 only if the recipe itself is missing."""
+    try:
+        with get_session() as session:
+            recipe = session.scalars(
+                select(Recipe).where(Recipe.id == recipe_id)
+            ).one_or_none()
+            if not recipe:
+                raise HTTPException(status_code=404, detail="Recipe not found")
+
+            ingredients = session.scalars(
+                select(Ingredient)
+                .join(RecipeIngredient)
+                .where(RecipeIngredient.recipe_id == recipe_id)
+                .order_by(Ingredient.name)
+            ).all()
+            return [IngredientResponse.model_validate(row) for row in ingredients]
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting recipes: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error getting recipe ingredients: {str(e)}",
+        )
 
 
 @recipes_router.get("/{recipe_id}", response_model=RecipeResponse)
@@ -81,32 +113,25 @@ async def get_recipe(recipe_id: int) -> RecipeResponse:
         raise HTTPException(status_code=500, detail=f"Error getting recipe: {str(e)}")
 
 
-@recipes_router.post("/", response_model=list[RecipeResponse])
+@recipes_router.post("/search", response_model=list[RecipeResponse])
 async def fetch_recipes_by_ingredients(
-    ingredient_ids: list[int],
+    body: RecipeSearchRequest,
 ) -> list[RecipeResponse]:
     """Fetch recipes that use any of the given ingredient ids."""
     try:
-        if not ingredient_ids:
-            raise HTTPException(status_code=400, detail="No ingredient ids provided")
-
         with get_session() as session:
             recipes = session.scalars(
                 select(Recipe)
                 .where(
                     Recipe.id.in_(
                         select(RecipeIngredient.recipe_id).where(
-                            RecipeIngredient.ingredient_id.in_(ingredient_ids)
+                            RecipeIngredient.ingredient_id.in_(body.ingredient_ids)
                         )
                     )
                 )
                 .order_by(Recipe.name)
             ).all()
-            if not recipes:
-                raise HTTPException(status_code=404, detail="No recipes found")
             return build_recipe_responses(session, list(recipes))
-    except HTTPException:
-        raise
     except Exception as e:
         raise HTTPException(
             status_code=500,

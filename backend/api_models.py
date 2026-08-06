@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class IngredientRequest(BaseModel):
@@ -31,3 +31,7 @@ class RecipeResponse(BaseModel):
     image_url: str
     instructions: str
     ingredients: list[IngredientResponse] = []
+
+
+class RecipeSearchRequest(BaseModel):
+    ingredient_ids: list[int] = Field(min_length=1)
