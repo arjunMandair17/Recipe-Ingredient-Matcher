@@ -1,0 +1,53 @@
+.ingredient-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  background: var(--tertiary-container);
+  color: var(--on-tertiary-container);
+  font-family: var(--font-label);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  box-shadow: var(--shadow-note);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ingredient-chip:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.ingredient-chip__name {
+  text-transform: capitalize;
+}
+
+.ingredient-chip__price {
+  opacity: 0.75;
+  font-weight: 400;
+}
+
+.ingredient-chip__price.is-specialty {
+  font-style: italic;
+  opacity: 0.9;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.ingredient-chip__remove {
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.ingredient-chip__remove .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+.ingredient-chip__remove:hover {
+  color: var(--error);
+}

@@ -1,0 +1,156 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 3.5rem;
+}
+
+.home-hero {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .home-hero {
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 3rem;
+  }
+}
+
+.home-hero__brand {
+  color: var(--primary-container);
+  margin: 0 0 0.75rem;
+}
+
+.home-hero__title {
+  margin-bottom: 1rem;
+}
+
+.home-hero__lede {
+  margin-bottom: 1.5rem;
+  max-width: 36ch;
+}
+
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+  position: relative;
+  z-index: 1;
+}
+
+.home-hero__media {
+  position: relative;
+}
+
+.home-hero__photo {
+  width: 100%;
+  height: min(420px, 55vw);
+  object-fit: cover;
+  border: 8px solid white;
+  border-bottom-width: 28px;
+  box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.12);
+  transform: rotate(2deg);
+  animation: photo-settle 0.7s ease both;
+}
+
+.home-how__heading {
+  position: relative;
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+}
+
+.home-how__heading::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--outline-variant);
+  z-index: 0;
+}
+
+.home-how__heading .headline-lg {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  background: var(--background);
+  padding: 0 1rem;
+}
+
+.home-how__tape {
+  z-index: 0;
+  top: 0 !important;
+}
+
+.home-how__grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 720px) {
+  .home-how__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.home-how__icon {
+  font-size: 2.25rem;
+  color: var(--primary-container);
+  margin-bottom: 0.5rem;
+}
+
+.home-how__link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--primary);
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.home-how__link:hover {
+  text-decoration: underline;
+}
+
+.home-price-note {
+  display: flex;
+  justify-content: center;
+}
+
+.home-price-note__card {
+  max-width: 36rem;
+  width: 100%;
+  text-align: center;
+}
+
+.home-price-note__icon {
+  font-size: 2rem;
+  color: var(--tertiary);
+  margin-bottom: 0.5rem;
+}
+
+.home-price-note__card .headline-md {
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+
+.home-price-note__card .body-muted {
+  max-width: 42ch;
+  margin: 0 auto;
+}
+
+@keyframes photo-settle {
+  from {
+    opacity: 0;
+    transform: rotate(6deg) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(2deg) translateY(0);
+  }
+}

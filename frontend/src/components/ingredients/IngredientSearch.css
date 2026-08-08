@@ -1,0 +1,102 @@
+.ingredient-search {
+  position: relative;
+  width: 100%;
+  max-width: 36rem;
+  margin: 0 auto;
+  z-index: 5;
+}
+
+.ingredient-search__form {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--surface-container-lowest);
+  padding: 0.5rem 0.65rem;
+  border-radius: 2px 2px 0 0;
+  box-shadow: var(--shadow-note);
+  border-bottom: 2px solid var(--outline);
+  border-bottom-left-radius: 5px 2px;
+  border-bottom-right-radius: 3px 5px;
+  position: relative;
+  z-index: 2;
+}
+
+.ingredient-search__form:focus-within {
+  border-bottom-color: var(--primary);
+}
+
+.ingredient-search__form input {
+  flex: 1 1 auto;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0.5rem;
+  color: var(--on-surface);
+  font-style: italic;
+  min-width: 0;
+}
+
+.ingredient-search__form input::placeholder {
+  color: var(--outline);
+}
+
+.ingredient-search__form .sticky-btn {
+  flex: 0 0 auto;
+}
+
+.ingredient-search__suggestions {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0.35rem;
+  background: var(--surface-container-lowest);
+  box-shadow: var(--shadow-lift);
+  border: 1px solid var(--outline-variant);
+  max-height: 14rem;
+  overflow: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 30;
+}
+
+.ingredient-search__option {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  border: none;
+  background: transparent;
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  text-transform: capitalize;
+  color: var(--on-surface);
+}
+
+.ingredient-search__option:hover,
+.ingredient-search__option:focus-visible {
+  background: var(--surface-container);
+  outline: none;
+}
+
+.ingredient-search__option .is-specialty {
+  font-style: italic;
+  text-transform: none;
+  color: var(--tertiary);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  max-width: 9rem;
+  text-align: right;
+}
+
+.ingredient-search__hint,
+.ingredient-search__error {
+  margin: 0.5rem 0 0;
+  color: var(--on-surface-variant);
+  font-size: 0.95rem;
+}
+
+.ingredient-search__error {
+  color: var(--error);
+}

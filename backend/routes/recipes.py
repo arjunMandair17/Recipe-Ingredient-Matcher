@@ -100,15 +100,17 @@ def annotate_match_types(
 
 @recipes_router.get("/", response_model=list[RecipeResponse])
 async def get_recipes(
+    name: str | None = Query(default=None, description="Optional case-insensitive name filter"),
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
 ) -> list[RecipeResponse]:
-    """Return recipes ordered by name, with limit/offset pagination."""
+    """Return recipes ordered by name, with optional name filter and limit/offset pagination."""
     try:
         with get_session() as session:
-            recipes = session.scalars(
-                select(Recipe).order_by(Recipe.name).limit(limit).offset(offset)
-            ).all()
+            stmt = select(Recipe).order_by(Recipe.name)
+            if name is not None:
+                stmt = stmt.where(Recipe.name.ilike(f"%{name.strip()}%"))
+            recipes = session.scalars(stmt.limit(limit).offset(offset)).all()
             return build_recipe_responses(session, list(recipes))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error getting recipes: {str(e)}")

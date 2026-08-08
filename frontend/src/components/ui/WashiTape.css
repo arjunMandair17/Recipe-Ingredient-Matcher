@@ -1,0 +1,18 @@
+.washi-tape {
+  display: block;
+}
+
+.washi-tape--yellow {
+  background: rgba(202, 169, 16, 0.65);
+  transform: rotate(-2deg);
+}
+
+.washi-tape--green {
+  background: rgba(161, 212, 148, 0.7);
+  transform: rotate(1deg);
+}
+
+.washi-tape--pink {
+  background: rgba(255, 179, 172, 0.75);
+  transform: rotate(-1deg);
+}

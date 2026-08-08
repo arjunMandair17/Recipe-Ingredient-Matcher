@@ -1,0 +1,53 @@
+.sticky-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: none;
+  border-radius: 2px;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-label);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: var(--shadow-note);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.sticky-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.sticky-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sticky-btn--primary {
+  background: var(--tertiary);
+  color: var(--on-tertiary);
+}
+
+.sticky-btn--secondary {
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+}
+
+.sticky-btn--dark {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.sticky-btn--ghost {
+  background: var(--surface-container-highest);
+  color: var(--on-surface);
+  width: 100%;
+}
+
+.sticky-btn--ghost:hover:not(:disabled) {
+  background: var(--primary);
+  color: var(--on-primary);
+}

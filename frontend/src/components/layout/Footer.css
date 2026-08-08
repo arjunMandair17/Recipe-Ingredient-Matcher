@@ -1,0 +1,19 @@
+.site-footer {
+  display: none;
+  text-align: center;
+  padding: 1.5rem var(--margin-desktop);
+  background: var(--surface-container-high);
+  border-top: 1px solid var(--outline-variant);
+  color: var(--on-surface-variant);
+  font-family: var(--font-label);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .site-footer {
+    display: block;
+  }
+}

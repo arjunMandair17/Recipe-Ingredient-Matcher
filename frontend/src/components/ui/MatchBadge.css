@@ -1,0 +1,25 @@
+.match-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 2px;
+  font-family: var(--font-label);
+}
+
+.match-badge .material-symbols-outlined {
+  font-size: 1.125rem;
+}
+
+.match-badge--exact {
+  background: rgba(188, 240, 174, 0.45);
+  border: 1px solid rgba(45, 90, 39, 0.35);
+  color: var(--primary);
+}
+
+.match-badge--partial {
+  background: rgba(231, 196, 51, 0.28);
+  border: 1px solid rgba(202, 169, 16, 0.45);
+  color: var(--tertiary);
+}

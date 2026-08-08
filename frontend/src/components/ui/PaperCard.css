@@ -1,0 +1,27 @@
+.paper-shell {
+  position: relative;
+  /* Room for overhanging washi tape above the scrap */
+  padding-top: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+.paper-shell > .washi-tape {
+  z-index: 3;
+}
+
+.paper-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.paper-card--padded {
+  padding: var(--paper-padding);
+}
+
+.paper-card.paper--torn {
+  /* Keep interactive content above the jagged mask zone */
+  padding-bottom: calc(var(--paper-padding) + 2.75rem);
+}
+
+.paper-shell:hover .paper-card {
+  box-shadow: var(--shadow-lift);
+}

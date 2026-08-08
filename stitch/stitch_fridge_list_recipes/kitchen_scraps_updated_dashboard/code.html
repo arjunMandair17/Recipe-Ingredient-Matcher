@@ -1,0 +1,373 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Kitchen Scraps Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Fonts: Bricolage Grotesque and Work Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Work+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffdad6",
+                        "on-secondary-fixed-variant": "#930010",
+                        "inverse-primary": "#a1d494",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#fbf9f8",
+                        "on-tertiary-container": "#4c3e00",
+                        "secondary": "#b6171e",
+                        "on-tertiary-fixed-variant": "#554500",
+                        "primary-container": "#2d5a27",
+                        "on-primary-container": "#9dd090",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#1b1c1c",
+                        "surface-variant": "#e4e2e1",
+                        "primary-fixed-dim": "#a1d494",
+                        "secondary-fixed-dim": "#ffb3ac",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed": "#410003",
+                        "on-primary-fixed-variant": "#23501e",
+                        "surface": "#fbf9f8",
+                        "surface-container-high": "#eae8e7",
+                        "secondary-container": "#da3433",
+                        "on-tertiary-fixed": "#221b00",
+                        "tertiary": "#705d00",
+                        "surface-container-highest": "#e4e2e1",
+                        "primary-fixed": "#bcf0ae",
+                        "tertiary-container": "#caa910",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#3b6934",
+                        "background": "#fbf9f8",
+                        "outline-variant": "#c2c9bb",
+                        "on-surface": "#1b1c1c",
+                        "surface-container": "#f0eded",
+                        "on-secondary-container": "#fffbff",
+                        "primary": "#154212",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#303030",
+                        "on-primary-fixed": "#002201",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#42493e",
+                        "tertiary-fixed": "#ffe174",
+                        "outline": "#72796e",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary-fixed-dim": "#e7c433",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "paper-padding": "24px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Bricolage Grotesque"],
+                        "label-sm": ["Work Sans"],
+                        "data-number": ["Work Sans"],
+                        "headline-lg": ["Bricolage Grotesque"],
+                        "headline-xl": ["Bricolage Grotesque"],
+                        "headline-lg-mobile": ["Bricolage Grotesque"]
+                    },
+                    "fontSize": {
+                        "body-md": ["18px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-sm": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "data-number": ["16px", { "lineHeight": "1.0", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-xl": ["40px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .paper-texture {
+            background-color: #fffdf7;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        .torn-bottom {
+            mask-image: url('data:image/svg+xml;utf8,<svg preserveAspectRatio="none" viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 v 8 q 5 2 10 0 t 10 0 t 10 0 t 10 0 t 10 0 t 10 0 t 10 0 t 10 0 t 10 0 t 10 0 v -8 Z" fill="black"/></svg>');
+            mask-size: 100% 100%;
+            padding-bottom: 24px;
+        }
+        .tape-strip {
+            background-color: rgba(202, 169, 16, 0.6); /* tertiary-container approx */
+            transform: rotate(-2deg);
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .pencil-underline {
+            border-bottom: 2px solid #72796e; /* outline */
+            border-bottom-left-radius: 5px 2px;
+            border-bottom-right-radius: 3px 5px;
+        }
+        
+        /* Custom Checkbox mimicking a pencil mark */
+        .hand-drawn-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #72796e;
+            border-radius: 3px;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+        }
+        .hand-drawn-checkbox:checked::after {
+            content: 'x';
+            font-family: 'Work Sans', sans-serif;
+            font-size: 24px;
+            line-height: 1;
+            color: #154212; /* primary */
+            position: absolute;
+            top: -6px;
+            left: 2px;
+        }
+    </style>
+</head>
+<body class="bg-surface-variant text-on-surface min-h-screen flex flex-col font-body-md">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background text-primary dark:text-primary-fixed-dim font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg w-full top-0 px-margin-mobile md:px-margin-desktop py-4 flex flex-col md:flex-row justify-between items-center gap-4 z-10 relative shadow-sm">
+<div class="font-headline-xl text-headline-xl text-primary dark:text-primary-fixed-dim">
+            Kitchen Scraps
+        </div>
+<!-- Navigation area mapping -->
+<nav class="hidden md:flex gap-gutter items-center"><a class="text-primary border-b-2 border-primary hover:text-primary transition-colors focus-within:border-primary" href="#">Recipes</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors focus-within:border-primary" href="#">Fridge</a></nav>
+<div class="flex items-center gap-4">
+<button class="hover:text-primary transition-colors focus-within:border-primary text-on-surface-variant">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+<button class="hover:text-primary transition-colors focus-within:border-primary text-on-surface-variant">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">menu</span>
+</button>
+</div>
+</header>
+<div class="flex flex-1 relative overflow-hidden">
+<!-- Main Canvas Area -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop overflow-y-auto relative pb-24 md:mr-80">
+<!-- Tilted Paper Container -->
+<div class="paper-texture torn-bottom p-paper-padding mx-auto max-w-5xl transform rotate-0 transition-transform duration-300 relative mt-4 z-0" style="mask-image: url(&quot;data:image/svg+xml;utf8,&lt;svg preserveAspectRatio='none' viewBox='0 0 100 10' xmlns='http://www.w3.org/2000/svg'&gt;&lt;path d='M0 0 L0 9 L5 10 L10 9 L15 10 L20 9 L25 10 L30 9 L35 10 L40 9 L45 10 L50 9 L55 10 L60 9 L65 10 L70 9 L75 10 L80 9 L85 10 L90 9 L95 10 L100 9 L100 0 Z' fill='black'/&gt;&lt;/svg&gt;&quot;); mask-size: 100% 100%;">
+<!-- Decorative Tape -->
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-8 tape-strip z-10"></div>
+<h1 class="font-headline-xl text-headline-xl text-primary mb-6 text-center">What's in the fridge?</h1>
+<!-- Search / Add Area -->
+<div class="mb-8 flex flex-col items-center justify-center max-w-2xl mx-auto gap-4">
+<div class="relative pencil-underline focus-within:border-primary transition-colors w-full flex items-center bg-surface-container-lowest p-2 rounded-t-sm shadow-sm">
+<span class="material-symbols-outlined text-outline ml-2">add</span>
+<input class="bg-transparent border-none focus:ring-0 w-full pl-4 py-2 font-body-md text-body-md placeholder-outline text-on-surface italic outline-none" placeholder="scribble down an ingredient..." type="text">
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-4 py-2 rounded-sm hover:bg-surface-tint transition-colors ml-2 uppercase tracking-wide flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">post_add</span> Add
+                            </button>
+</div>
+</div>
+<!-- My Ingredients (Washi Chips) -->
+<div class="mb-12 max-w-4xl mx-auto border-t border-outline-variant pt-6 border-dashed">
+<h2 class="font-headline-lg text-headline-lg text-secondary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">compost</span> My Scraps
+                    </h2>
+<div class="flex flex-wrap gap-4">
+<div class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm px-4 py-2 opacity-95 transform -rotate-2 shadow-sm flex items-center gap-3 cursor-pointer hover:-translate-y-1 hover:shadow-md transition-all">
+<span class="text-[16px]">🍅 Tomato</span> <span class="font-data-number text-data-number opacity-70">-$0.50</span>
+<button class="hover:text-error transition-colors p-1"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm px-4 py-2 opacity-95 transform rotate-1 shadow-sm flex items-center gap-3 cursor-pointer hover:-translate-y-1 hover:shadow-md transition-all">
+<span class="text-[16px]">🍗 Chicken Breast</span> <span class="font-data-number text-data-number opacity-70">-$4.00</span>
+<button class="hover:text-error transition-colors p-1"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm px-4 py-2 opacity-95 transform -rotate-1 shadow-sm flex items-center gap-3 cursor-pointer hover:-translate-y-1 hover:shadow-md transition-all">
+<span class="text-[16px]">🧅 Half an Onion</span> <span class="font-data-number text-data-number opacity-70">-$0.25</span>
+<button class="hover:text-error transition-colors p-1"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm px-4 py-2 opacity-95 transform rotate-2 shadow-sm flex items-center gap-3 cursor-pointer hover:-translate-y-1 hover:shadow-md transition-all">
+<span class="text-[16px]">🧄 Garlic Cloves</span> <span class="font-data-number text-data-number opacity-70">-$0.10</span>
+<button class="hover:text-error transition-colors p-1"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
+</div>
+</div>
+<!-- Recipe Matches (Index Cards Grid) -->
+<div class="max-w-5xl mx-auto">
+<div class="flex items-center justify-between mb-6 border-b border-outline-variant pb-2">
+<h2 class="font-headline-lg text-headline-lg text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">auto_awesome</span> Recipe Matches
+                        </h2>
+<span class="text-on-surface-variant font-label-sm text-label-sm">Found 8 recipes</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Card 1 -->
+<div class="paper-texture p-4 flex flex-col gap-3 transform -rotate-1 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-outline-variant/30">
+<!-- Polaroid Style Photo -->
+<div class="relative w-full h-48 bg-surface-container-low p-2 pb-8 shadow-sm mb-2 transform rotate-1">
+<img class="w-full h-full object-cover" data-alt="A rustic, hearty chicken and tomato stew served in a cast iron skillet on a wooden table, warm, inviting kitchen lighting, tactile and homey aesthetic, vibrant reds and rich browns." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjsu_og9le7zvCJjq9tZU40AMdAGYZ97-60atkhT6opTFjCOwFnvb_r4vR9Bm0L0GtW-5LvJj3CCqfWfuaLanqkd1naKlS0zicw6a6oa4ZE0JPyoSAAl_ZdLG8h1EbI6zba1A-dEBE5T1rsC8M6YYfBz2Gp6vOzYR_N3FeRR54c_cYKeZYTbvwg9-wHpJZ0oW5xjDVin9nzK1hPkhcdRvJY4I7KJ84isBtBW7G1fE8i4Z9e84gZq8KBg">
+<div class="absolute bottom-1 right-2 tape-strip w-12 h-4 transform rotate-6"></div>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight h-14 line-clamp-2">Tomato Chicken Skillet</h3>
+<div class="bg-tertiary-fixed-dim/30 p-2 rounded-sm border border-tertiary-fixed-dim/50">
+<p class="font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px] text-tertiary">check_circle</span> Uses 4/4 scraps</span>
+<span class="text-primary font-bold">100% Match</span>
+</p>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-label-sm text-label-sm mt-auto pt-2 border-t border-outline-variant/30">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 30 min</span>
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-[16px]">payments</span> Est. +$1.50</span>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-colors py-2 text-center font-label-sm text-label-sm uppercase mt-2">View Recipe</button>
+</div>
+<!-- Card 2 -->
+<div class="paper-texture p-4 flex flex-col gap-3 transform rotate-2 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-outline-variant/30">
+<!-- Polaroid Style Photo -->
+<div class="relative w-full h-48 bg-surface-container-low p-2 pb-8 shadow-sm mb-2 transform -rotate-1">
+<img class="w-full h-full object-cover" data-alt="A fresh, vibrant chopped salad with tomatoes, onions, and shredded chicken in a ceramic bowl on a linen cloth, bright daylight, fresh and healthy aesthetic, high contrast between greens and reds." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl_8J27NPXuoheKqnMRwNHmcbP-SkDcMI_m0a3RWScIA-goyWUBMx9DulAKB1U7vzVGKpIJDq3zDROQBYcAaWkh9VaNAeD6CIT5T5ee7WRM6j1NYCn-cjmv3IkyiNiIIWCm4bzup5toZ9hsyZx2akXCYRXPW-7gey1iu4nL2f9dTBGNm9BDXk8VO3AlvJZ8V0qkdXB7lEIKzFBbqm2g8HWIkBcmDSjqHlLeTPPFuKTnjBTJ-ITH1khtw">
+<div class="absolute -top-2 left-4 tape-strip w-16 h-5 transform -rotate-3"></div>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight h-14 line-clamp-2">Quick Scraps Salad</h3>
+<div class="bg-tertiary-fixed-dim/20 p-2 rounded-sm border border-tertiary-fixed-dim/30">
+<p class="font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px] text-primary">check_circle</span> Uses 3/4 scraps</span>
+<span class="text-on-surface-variant font-bold">75% Match</span>
+</p>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-label-sm text-label-sm mt-auto pt-2 border-t border-outline-variant/30">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 15 min</span>
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-[16px]">payments</span> Est. +$2.75</span>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-colors py-2 text-center font-label-sm text-label-sm uppercase mt-2">View Recipe</button>
+</div>
+<!-- Card 3 -->
+<div class="paper-texture p-4 flex flex-col gap-3 transform -rotate-2 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-outline-variant/30">
+<!-- Polaroid Style Photo -->
+<div class="relative w-full h-48 bg-surface-container-low p-2 pb-8 shadow-sm mb-2 transform rotate-2">
+<img class="w-full h-full object-cover" data-alt="A bowl of rustic tomato and onion soup with crusty bread on the side." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA5-RdMUFK38mXL9aWjunk7Jg3DVzGJR0gABGU_UqC_xD8mOCAlUJSeuP1tGJUJVaUQT-E_vHwGa7AxnJW0X80SEAkSMyky5Il9lwCT4PbmlHegIcRVpvFTWnfxvb_wxFonc539ctw7_rz3GyNivz_gVoO_XdP19cfLaFd7ImUYymQksWXgqE6Ezkroi4uAcwUkA76jPKnESGa1OQ1MB5Xb-bo3HPL926q5LwlW_RvSVwG7Szm3su1Uw">
+<div class="absolute bottom-4 left-1/2 -translate-x-1/2 tape-strip w-12 h-4 transform rotate-1"></div>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight h-14 line-clamp-2">Rustic Tomato Soup</h3>
+<div class="bg-surface-variant p-2 rounded-sm border border-outline-variant/30">
+<p class="font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px] text-outline">check_circle</span> Uses 2/4 scraps</span>
+<span class="text-on-surface-variant font-bold">50% Match</span>
+</p>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-label-sm text-label-sm mt-auto pt-2 border-t border-outline-variant/30">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 45 min</span>
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-[16px]">payments</span> Est. +$4.00</span>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-colors py-2 text-center font-label-sm text-label-sm uppercase mt-2">View Recipe</button>
+</div>
+<!-- Card 4 -->
+<div class="paper-texture p-4 flex flex-col gap-3 transform rotate-1 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-outline-variant/30">
+<!-- Polaroid Style Photo -->
+<div class="relative w-full h-48 bg-surface-container-low p-2 pb-8 shadow-sm mb-2 transform rotate-1">
+<img class="w-full h-full object-cover" data-alt="Chicken and vegetable stir fry in a wok." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADEJ4PGVHvgJk7pEvgkPbuTkAEKbctZtTLJAXByUEOsxmfbyvi4m-3nLmsi0JpEU9af2q_ZK-yLphjpUhHNoexwO4VbNX0ggXsTU8uiJBguRQWPZJ_EXVx24qMxDZJTKJdDMGr8Ge0CwQDylOvwd_5HG5wHlGIRGjkhJQnJAVKk9YdRB7OseNJftEl_KpAOyLP8j0nYqxY5_h1NVe0rLFTYveS4e8yg7os58aI9XjDrQ4rAHzu6yBG4w">
+<div class="absolute top-1 right-2 tape-strip w-10 h-3 transform -rotate-12"></div>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight h-14 line-clamp-2">Simple Chicken Stir-fry</h3>
+<div class="bg-tertiary-fixed-dim/20 p-2 rounded-sm border border-tertiary-fixed-dim/30">
+<p class="font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px] text-primary">check_circle</span> Uses 3/4 scraps</span>
+<span class="text-on-surface-variant font-bold">75% Match</span>
+</p>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-label-sm text-label-sm mt-auto pt-2 border-t border-outline-variant/30">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 20 min</span>
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-[16px]">payments</span> Est. +$3.50</span>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-colors py-2 text-center font-label-sm text-label-sm uppercase mt-2">View Recipe</button>
+</div>
+<!-- Card 5 -->
+<div class="paper-texture p-4 flex flex-col gap-3 transform -rotate-1 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-outline-variant/30">
+<!-- Polaroid Style Photo -->
+<div class="relative w-full h-48 bg-surface-container-low p-2 pb-8 shadow-sm mb-2 transform -rotate-2">
+<img class="w-full h-full object-cover" data-alt="Baked chicken breast with roasted tomatoes and onions." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyytLtDWyQdIFp8VpsCVsHQeFVY1xilVN8qw9G5J9ZWb5TZ16PMbtOhewFK62BXLMURZYHbcqeh8F_0e38lXDqtFMmMOpjIjOXP4tlb6z49qbIPNVuX5S-MYqdcnxQRcQk9oFq0H2Aq-W5nFFZaTUKYv_HDEkOl_r-l_IR5skOuR4zSxfOijYP_vCBQ7hJ5umvMgusMFjfJVEEsrFUh925cwLNgWThwFX5Mvl0TXic99RzknlvBZTY5A">
+<div class="absolute top-1/2 left-2 tape-strip w-12 h-4 transform rotate-90"></div>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight h-14 line-clamp-2">Sheet Pan Chicken &amp; Veggies</h3>
+<div class="bg-tertiary-fixed-dim/30 p-2 rounded-sm border border-tertiary-fixed-dim/50">
+<p class="font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px] text-tertiary">check_circle</span> Uses 4/4 scraps</span>
+<span class="text-primary font-bold">100% Match</span>
+</p>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-label-sm text-label-sm mt-auto pt-2 border-t border-outline-variant/30">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 40 min</span>
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-[16px]">payments</span> Est. +$0.50</span>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-colors py-2 text-center font-label-sm text-label-sm uppercase mt-2">View Recipe</button>
+</div>
+<!-- Card 6 -->
+<div class="paper-texture p-4 flex flex-col gap-3 transform rotate-2 hover:-translate-y-1 hover:shadow-lg transition-all duration-300 border border-outline-variant/30">
+<!-- Polaroid Style Photo -->
+<div class="relative w-full h-48 bg-surface-container-low p-2 pb-8 shadow-sm mb-2 transform rotate-1">
+<img class="w-full h-full object-cover" data-alt="Homemade salsa with tomatoes, onions, and garlic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATiMRVnwOFtAXGBSCTdwpGhkIlENP89T0WG7m5p----aoVXiL6Z65HDmFOd2UxT_gHrArPEY_XeEmSjJmXQgWldSuCyAO7ETtgQVRgiguSAK0zNw9o_A6th3wY0iw1m5TvokrKwVVl0dJokAAhKRK2skVQC23XzOY8UM1T3t64OamXw1gi10TMBaD_BHIzMhrzMYRKf-ZC4vQZlf7OfEOG0wQy55gxviVWXNv196ETFKWc0rA-aj3Y6Q">
+<div class="absolute -bottom-1 right-8 tape-strip w-14 h-4 transform -rotate-6"></div>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface leading-tight h-14 line-clamp-2">Fresh Pico de Gallo</h3>
+<div class="bg-tertiary-fixed-dim/20 p-2 rounded-sm border border-tertiary-fixed-dim/30">
+<p class="font-label-sm text-label-sm text-on-surface flex items-center justify-between">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[18px] text-primary">check_circle</span> Uses 3/4 scraps</span>
+<span class="text-on-surface-variant font-bold">75% Match</span>
+</p>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant font-label-sm text-label-sm mt-auto pt-2 border-t border-outline-variant/30">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 10 min</span>
+<span class="flex items-center gap-1 text-primary"><span class="material-symbols-outlined text-[16px]">payments</span> Est. +$1.00</span>
+</div>
+<button class="w-full bg-surface-container-highest hover:bg-primary hover:text-on-primary transition-colors py-2 text-center font-label-sm text-label-sm uppercase mt-2">View Recipe</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- SideNavBar (Desktop Only as per shell visibility rule for structural anchor, but requested by prompt) -->
+<aside class="hidden md:flex flex-col h-full w-80 fixed right-0 top-0 shadow-sm bg-surface-container-low dark:bg-surface-container-highest p-paper-padding gap-gutter z-20 overflow-y-auto border-l border-outline-variant/20 pt-20">
+<div class="font-headline-lg text-headline-lg text-primary mt-4">
+                Shopping List
+            </div>
+<div class="font-label-sm text-label-sm md:font-body-md md:text-body-md text-secondary dark:text-secondary-fixed mb-4">
+                Estimated Total: $0.00
+            </div>
+<div class="flex flex-col gap-2 flex-1 mt-4">
+<p class="text-on-surface-variant text-body-md italic text-center mt-10">Your list is empty. Add a recipe to get started!</p>
+</div>
+<button class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm uppercase p-4 shadow-sm transition-all mt-4 w-full cursor-not-allowed opacity-50">
+                Checkout Scraps
+            </button>
+</aside>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 z-50 rounded-t-full shadow-lg bg-surface-container-high dark:bg-surface-container-highest">
+<a class="flex flex-col items-center justify-center bg-tertiary text-on-tertiary rounded-xl p-2 shadow-sm font-label-sm text-label-sm active:translate-y-[-2px] duration-200" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="">Find</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 font-label-sm text-label-sm hover:bg-tertiary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined">shopping_basket</span>
+<span class="">List</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 font-label-sm text-label-sm hover:bg-tertiary-fixed-dim transition-all" href="#">
+<span class="material-symbols-outlined">bookmark</span>
+<span class="">Saved</span>
+</a>
+</nav>
+
+
+
+
+</body></html>

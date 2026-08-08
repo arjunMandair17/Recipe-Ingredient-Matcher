@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Kitchen Scraps - Search Recipes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Work+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline-variant": "#c2c9bb",
+                      "surface-container-high": "#eae8e7",
+                      "background": "#fbf9f8",
+                      "on-background": "#1b1c1c",
+                      "error-container": "#ffdad6",
+                      "surface-tint": "#3b6934",
+                      "on-primary-fixed": "#002201",
+                      "secondary-container": "#da3433",
+                      "inverse-primary": "#a1d494",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#1b1c1c",
+                      "error": "#ba1a1a",
+                      "on-primary-fixed-variant": "#23501e",
+                      "primary-container": "#2d5a27",
+                      "tertiary-fixed-dim": "#e7c433",
+                      "outline": "#72796e",
+                      "on-secondary-container": "#fffbff",
+                      "on-secondary": "#ffffff",
+                      "surface-container-low": "#f6f3f2",
+                      "on-secondary-fixed": "#410003",
+                      "secondary-fixed": "#ffdad6",
+                      "primary-fixed-dim": "#a1d494",
+                      "on-secondary-fixed-variant": "#930010",
+                      "primary": "#154212",
+                      "tertiary": "#705d00",
+                      "surface-dim": "#dcd9d9",
+                      "on-tertiary-fixed-variant": "#554500",
+                      "surface-container": "#f0eded",
+                      "inverse-surface": "#303030",
+                      "on-tertiary": "#ffffff",
+                      "on-surface-variant": "#42493e",
+                      "on-error": "#ffffff",
+                      "surface-variant": "#e4e2e1",
+                      "tertiary-container": "#caa910",
+                      "surface-bright": "#fbf9f8",
+                      "on-tertiary-fixed": "#221b00",
+                      "on-tertiary-container": "#4c3e00",
+                      "on-primary-container": "#9dd090",
+                      "on-primary": "#ffffff",
+                      "secondary-fixed-dim": "#ffb3ac",
+                      "inverse-on-surface": "#f3f0f0",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e4e2e1",
+                      "primary-fixed": "#bcf0ae",
+                      "surface": "#fbf9f8",
+                      "secondary": "#b6171e",
+                      "tertiary-fixed": "#ffe174"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "gutter": "24px",
+                      "margin-mobile": "16px",
+                      "unit": "8px",
+                      "paper-padding": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Bricolage Grotesque"
+                      ],
+                      "headline-xl": [
+                              "Bricolage Grotesque"
+                      ],
+                      "headline-lg": [
+                              "Bricolage Grotesque"
+                      ],
+                      "data-number": [
+                              "Work Sans"
+                      ],
+                      "body-md": [
+                              "Bricolage Grotesque"
+                      ],
+                      "label-sm": [
+                              "Work Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-xl": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "data-number": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.0",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .paper-texture {
+            background-color: #fbf9f8;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        .torn-edge-bottom {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 98%, 95% 100%, 90% 98%, 85% 100%, 80% 97%, 75% 100%, 70% 98%, 65% 100%, 60% 97%, 55% 100%, 50% 98%, 45% 100%, 40% 97%, 35% 100%, 30% 98%, 25% 100%, 20% 97%, 15% 100%, 10% 98%, 5% 100%, 0% 98%);
+        }
+        .washi-tape {
+            position: absolute;
+            height: 20px;
+            background-color: rgba(231, 196, 51, 0.7); /* tertiary-fixed-dim with opacity */
+            transform: rotate(-2deg);
+            z-index: 10;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .washi-tape-top-center {
+            top: -10px;
+            left: 50%;
+            width: 80px;
+            margin-left: -40px;
+        }
+        .polaroid-photo {
+            border: 8px solid white;
+            border-bottom-width: 24px;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .handwritten-input::placeholder {
+            font-family: 'Work Sans', sans-serif;
+            font-style: italic;
+            color: #72796e;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md text-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background w-full top-0 px-margin-mobile md:px-margin-desktop py-4 flex flex-col md:flex-row justify-between items-center gap-4 z-40 sticky">
+<div class="font-headline-xl text-headline-xl text-primary dark:text-primary-fixed-dim">
+            Kitchen Scraps
+        </div>
+<!-- Navigation Links (Hidden on Mobile) -->
+<nav class="hidden md:flex gap-6 items-center"><a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">Home</a>
+<a class="text-primary border-b-2 border-primary font-label-sm text-label-sm" href="#">Recipes</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm" href="#">Fridge</a></nav>
+<div class="flex items-center gap-4">
+<button aria-label="menu" class="text-primary dark:text-primary-fixed-dim hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col md:flex-row w-full max-w-[1600px] mx-auto pb-24 md:pb-0">
+<!-- Canvas Area -->
+<div class="flex-1 p-margin-mobile md:p-margin-desktop bg-surface-container-lowest">
+<!-- Search Section -->
+<section class="mb-12 relative w-full max-w-3xl mx-auto">
+<div class="washi-tape washi-tape-top-center rotate-2 w-32 ml-[-64px]"></div>
+<div class="paper-texture p-paper-padding shadow-sm torn-edge-bottom transform rotate-1 hover:shadow-md transition-shadow relative">
+<div class="flex items-center border-b-2 border-outline pb-2 focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined text-outline mr-2 text-2xl" data-icon="search">search</span>
+<input class="w-full bg-transparent border-none outline-none handwritten-input text-headline-lg-mobile md:text-headline-lg font-headline-lg-mobile md:font-headline-lg text-primary placeholder-outline focus:ring-0" placeholder="Search recipes by name..." type="text">
+</div>
+</div>
+</section>
+<!-- Active Filters / Washi Chips -->
+<section class="mb-8 flex flex-wrap gap-3 justify-center">
+<div class="bg-tertiary-fixed-dim/30 px-3 py-1 font-label-sm text-label-sm text-on-tertiary-container shadow-sm transform -rotate-1 cursor-pointer hover:-translate-y-1 transition-transform border border-tertiary-container/20">
+                    Quick Meals
+                </div>
+<div class="bg-secondary-container/20 px-3 py-1 font-label-sm text-label-sm text-on-secondary-container shadow-sm transform rotate-2 cursor-pointer hover:-translate-y-1 transition-transform border border-secondary-container/30 text-secondary">
+                    Budget Friendly
+                </div>
+<div class="bg-primary-container/20 px-3 py-1 font-label-sm text-label-sm text-on-primary-container shadow-sm transform -rotate-2 cursor-pointer hover:-translate-y-1 transition-transform border border-primary-container/30 text-primary">
+                    Vegetarian
+                </div>
+</section>
+<!-- Recipe Grid (Masonry Style approximation) -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter items-start">
+<!-- Recipe Card 1 -->
+<article class="paper-texture p-paper-padding shadow-sm torn-edge-bottom transform -rotate-1 hover:-translate-y-2 hover:shadow-lg transition-all duration-300 relative group">
+<div class="washi-tape top-[-5px] right-4 w-16 rotate-6 bg-secondary/50"></div>
+<div class="mb-4 polaroid-photo relative">
+<img alt="Recipe Image" class="w-full h-48 object-cover" data-alt="A warm, inviting close-up of a rustic bowl of tomato basil soup on a wooden table. The soup is vibrant red, garnished with fresh green basil leaves and a drizzle of cream. Soft, natural daylight highlights the steam rising from the bowl, creating a cozy, home-cooked aesthetic. The background is slightly blurred, emphasizing the texture of the wooden surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw4Myp7utr7k5Dy2HmY1HeRg5EYtO87WCAPAUV-MLMcL0_RXfdybZ9bvX-8k493No2jSFJ_eTaJNOsWO6fh1JCUKTFNq5BXw9bVW_3wjww3who6F552fV-ehNwmBVYa8g4PjDGYyNZeykZu6vPNTXuors9OOAPpEj3VZ9b7bMGs2yaEYllO9uzedKWUnmbpAYBf_w45xQ5ZCXUZuFrYZ14dZrIvgxGO9fXQNwVOkDO0Mc8TccAAJevAw">
+<span class="absolute bottom-1 right-2 font-data-number text-data-number text-outline">15 min</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2 group-hover:text-tertiary transition-colors">Classic Tomato Soup</h3>
+<p class="text-on-surface-variant line-clamp-2">A comforting, quick meal using pantry staples. Perfect for a rainy day or a quick lunch.</p>
+</article>
+<!-- Recipe Card 2 -->
+<article class="paper-texture p-paper-padding shadow-sm torn-edge-bottom transform rotate-2 hover:-translate-y-2 hover:shadow-lg transition-all duration-300 relative group">
+<div class="washi-tape top-[-10px] left-[-10px] w-20 -rotate-12 bg-primary-fixed/80"></div>
+<div class="mb-4 polaroid-photo relative">
+<img alt="Recipe Image" class="w-full h-56 object-cover" data-alt="A brightly lit overhead shot of a fresh, vibrant green salad in a large ceramic bowl. The salad features crisp lettuce, sliced cucumbers, halved cherry tomatoes, and a sprinkling of seeds. The setting is a clean, bright kitchen counter. The mood is fresh, healthy, and effortless, fitting a modern light-mode culinary style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChEpi_3KezMzujv9AaBduCLz6zRYUkPH82yxWphtIRwad67KCrGHhWJWzXFfXa0VNJoHk4fmdnfjEDCZa6Okw65RC-4gIJCmxRRToDxNcYZpNlC4ngvKb6SuEqvaC59oSH15uCgI0JKNtcYTWdcMAkrIE3pJf9OQt6hMn8XiqpWP6WYGWoiKvBoPw6gTN5ZQaRnt_Hw-UE2n7xljfPpnSaYx4N0dfGeiL2OCT4Ic3ZGkEFBrX0rotgnQ">
+<span class="absolute bottom-1 right-2 font-data-number text-data-number text-outline">10 min</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2 group-hover:text-tertiary transition-colors">Crispy Fridge Salad</h3>
+<p class="text-on-surface-variant line-clamp-2">Clear out the crisper drawer with this versatile, crunchy base that takes any dressing well.</p>
+</article>
+<!-- Recipe Card 3 -->
+<article class="paper-texture p-paper-padding shadow-sm torn-edge-bottom transform -rotate-2 hover:-translate-y-2 hover:shadow-lg transition-all duration-300 relative group">
+<div class="washi-tape top-0 right-10 w-24 rotate-3 bg-tertiary-fixed/80"></div>
+<div class="mb-4 polaroid-photo relative">
+<img alt="Recipe Image" class="w-full h-40 object-cover" data-alt="A rustic, hearty plate of scrambled eggs with scattered herbs and a side of heavily buttered sourdough toast. The scene is lit by warm morning sunlight streaming across a textured linen tablecloth. The colors are earthy and inviting, focusing on the golden yellows of the eggs and the crusty brown of the bread, evoking a slow weekend morning." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl71zN56ATHzU9ZAuZ7x7TDAKE3MIVPi0KFz0jxKacCS1ZET3o3Ai78jPoS_5Jb9rjZFGNcX4CnBr83UP6tGOKtA2rJhQIOWZsMu6bpoVo7FpkEAXTKyMf5dqiEsw42oOmXH82bEuPQvX9ItH0UmscoKCXCfWL0ZaSiXhASadPAIi1jXVG7uohygMjiApIlpSSxPYzn6PEo3ev9Sm702VPOHwjoM-Pqu8njT4xa3iUkvh6TtaTkabwcA">
+<span class="absolute bottom-1 right-2 font-data-number text-data-number text-outline">5 min</span>
+</div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-primary mb-2 group-hover:text-tertiary transition-colors">Perfect Scrambled Eggs</h3>
+<p class="text-on-surface-variant line-clamp-2">The secret is low heat and a lot of patience. Simple ingredients, extraordinary result.</p>
+</article>
+</section>
+</div>
+<!-- SideNavBar (Desktop Only) -->
+<aside class="hidden md:flex shadow-sm bg-surface-container-low dark:bg-surface-container-highest h-full w-80 fixed right-0 top-0 flex-col p-paper-padding gap-gutter z-50 pt-24 border-l border-outline-variant/30">
+<div class="mb-6 border-b border-outline-variant/50 pb-4">
+<h2 class="font-headline-lg text-headline-lg text-primary">Shopping List</h2>
+<p class="text-on-surface-variant font-data-number text-data-number mt-1">Estimated Total: $0.00</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="bg-surface text-on-surface-variant font-body-md text-body-md p-3 rounded-DEFAULT hover:rotate-[-1deg] hover:shadow-md transition-all flex items-center gap-3 active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant">restaurant</span>
+                    Recipes
+                </a>
+<a class="bg-surface text-on-surface-variant font-body-md text-body-md p-3 rounded-DEFAULT hover:rotate-[-1deg] hover:shadow-md transition-all flex items-center gap-3 active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="kitchen">kitchen</span>
+                    Fridge
+                </a>
+<a class="bg-surface text-on-surface-variant font-body-md text-body-md p-3 rounded-DEFAULT hover:rotate-[-1deg] hover:shadow-md transition-all flex items-center gap-3 active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                    Pantry
+                </a>
+<a class="bg-surface text-on-surface-variant font-body-md text-body-md p-3 rounded-DEFAULT hover:rotate-[-1deg] hover:shadow-md transition-all flex items-center gap-3 active:scale-95 duration-150 mt-auto" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</nav>
+<button class="bg-tertiary text-on-tertiary font-label-sm text-label-sm uppercase p-4 shadow-sm hover:shadow-md transform hover:-translate-y-1 transition-all mt-4">
+                Checkout Scraps
+            </button>
+</aside>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 shadow-lg bg-surface-container-high dark:bg-surface-container-highest z-50 rounded-t-full">
+<a class="flex flex-col items-center justify-center bg-tertiary text-on-tertiary rounded-xl p-2 shadow-sm transform translate-y-[-2px] duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="search" style="font-variation-settings: 'FILL' 1;">search</span>
+<span class="font-label-sm text-label-sm">Find</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-tertiary-fixed-dim transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+<span class="font-label-sm text-label-sm">List</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-tertiary-fixed-dim transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+<span class="font-label-sm text-label-sm">Saved</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-tertiary-fixed-dim transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+
+
+</body></html>

@@ -1,0 +1,41 @@
+.ingredient-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.ingredient-list__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.65rem;
+  align-items: baseline;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed var(--outline-variant);
+}
+
+.ingredient-list__mark {
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+.ingredient-list__name {
+  text-transform: capitalize;
+}
+
+.ingredient-list__price {
+  color: var(--on-surface-variant);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: right;
+  max-width: 14rem;
+}
+
+.ingredient-list__price.is-specialty {
+  font-style: italic;
+  color: var(--tertiary);
+  font-size: 0.75rem;
+}
