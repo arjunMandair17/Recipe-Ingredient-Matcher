@@ -99,11 +99,13 @@ function MatchPage() {
           style: { top: 0, left: '50%', transform: 'translateX(-50%) rotate(-2deg)' },
         }}
       >
-        <h1 className="headline-xl match-page__title">What&apos;s in the fridge?</h1>
-        <p className="body-muted match-page__lede">
-          Add ingredients from the database. Matches are tagged exact or partial
-          by the API, and scored by how many of your scraps the recipe uses.
-        </p>
+        <div className="match-page__intro">
+          <h1 className="headline-xl match-page__title">What&apos;s in the fridge?</h1>
+          <p className="match-page__lede body-muted">
+            Add ingredients from the database. Matches are tagged exact or partial
+            by the API, and scored by how many of your scraps the recipe uses.
+          </p>
+        </div>
 
         <IngredientSearch selectedIds={selectedIds} onAdd={handleAdd} />
         <SelectedScraps ingredients={selected} onRemove={handleRemove} />

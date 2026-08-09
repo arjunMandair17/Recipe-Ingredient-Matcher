@@ -9,9 +9,9 @@
 .ingredient-search__form {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.5rem;
   background: var(--surface-container-lowest);
-  padding: 0.5rem 0.65rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.65rem;
   border-radius: 2px 2px 0 0;
   box-shadow: var(--shadow-note);
   border-bottom: 2px solid var(--outline);
@@ -25,23 +25,54 @@
   border-bottom-color: var(--primary);
 }
 
+.ingredient-search__form > .material-symbols-outlined {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 1.35rem;
+  color: var(--outline);
+}
+
 .ingredient-search__form input {
   flex: 1 1 auto;
   border: none;
   background: transparent;
   outline: none;
-  padding: 0.5rem;
+  margin: 0;
+  padding: 0.35rem 0.25rem;
   color: var(--on-surface);
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-style: italic;
+  font-weight: 400;
+  line-height: 1.25;
   min-width: 0;
+  height: 2.5rem;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ingredient-search__form input::-webkit-search-decoration,
+.ingredient-search__form input::-webkit-search-cancel-button,
+.ingredient-search__form input::-webkit-search-results-button,
+.ingredient-search__form input::-webkit-search-results-decoration {
+  display: none;
 }
 
 .ingredient-search__form input::placeholder {
   color: var(--outline);
+  opacity: 1;
+  line-height: inherit;
 }
 
 .ingredient-search__form .sticky-btn {
   flex: 0 0 auto;
+  align-self: center;
+  padding: 0.55rem 1rem;
+  line-height: 1;
+  height: 2.5rem;
 }
 
 .ingredient-search__suggestions {

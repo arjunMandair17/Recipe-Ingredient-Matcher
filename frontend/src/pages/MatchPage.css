@@ -10,15 +10,27 @@
   width: 100%;
 }
 
+.match-page__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
 .match-page__title {
   text-align: center;
-  margin-bottom: 0.75rem;
+  margin: 0 0 0.75rem;
+  width: 100%;
 }
 
 .match-page__lede {
-  text-align: center;
-  margin: 0 auto 1.5rem;
+  display: block;
+  width: 100%;
   max-width: 40ch;
+  margin: 0;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .match-page__actions {

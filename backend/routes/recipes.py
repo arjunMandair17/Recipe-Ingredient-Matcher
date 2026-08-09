@@ -9,7 +9,7 @@ from backend.api_models import (
 )
 from db.sql_init import get_session
 from db.db_models import Recipe, Ingredient, RecipeIngredient
-from db.normalize import search_query
+from db.normalize import search_query, DENYLIST
 
 
 recipes_router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -64,11 +64,11 @@ def expand_ingredient_ids(session: Session, ingredient_ids: list[int]) -> list[i
 
     bases = {search_query(ing.name) for ing in selected}
     bases.discard("")
-    # head noun only (last token): "king prawn" also matches via "prawn", not "king"
+
     for base in list(bases):
         parts = base.split()
-        if len(parts) > 1 and len(parts[-1]) > 2:
-            bases.add(parts[-1])
+        if len(parts) > 1:
+            bases.update(part for part in parts if part not in DENYLIST and len(part) > 2)
     if not bases:
         return list(ingredient_ids)
 

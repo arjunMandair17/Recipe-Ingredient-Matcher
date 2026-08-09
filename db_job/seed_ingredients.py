@@ -4,16 +4,13 @@ from sqlalchemy import select
 from datetime import datetime
 from db.sql_init import get_session
 from db.db_models import Ingredient, Recipe, RecipeIngredient
-from db.normalize import search_query, singularize
+from db.normalize import canonicalize_ingredient, search_query
 
 
 def get_ingredients(recipe: dict) -> list[str]:
-    """Get ingredients from a recipe, normalized to singular form."""
+    """Get recipe ingredients as canonical names (singularized, de-adjectived, aliased)."""
     ingredients = recipe.get("ingredients") or []
-    return [
-        " ".join(singularize(word) for word in ingredient.lower().strip().split())
-        for ingredient in ingredients
-    ]
+    return [canonicalize_ingredient(ingredient) for ingredient in ingredients]
 
 
 def get_price(ingredient: str) -> float | None:
@@ -42,12 +39,13 @@ def get_ingredient_prices(ingredients: list[str]) -> dict[str, float | None]:
 
 
 def seed_ingredients(recipes: list[dict]) -> tuple[dict[str, float | None], int, int]:
-    """Seed the database with unique ingredients and recipe links."""
-    ingredients = set()
+    """Seed unique canonical ingredients and link recipes to those shared rows."""
+    ingredients: set[str] = set()
     for recipe in recipes:
-        ingredients.update(get_ingredients(recipe))  ## adds all ingredients from the current recipe
-    prices = get_ingredient_prices(list(ingredients)) ## scrape prices for all
-    scrape_count = len(prices) ## number of ingredients that were scraped successfully
+        ingredients.update(get_ingredients(recipe))
+
+    prices = get_ingredient_prices(list(ingredients))
+    scrape_count = sum(1 for price in prices.values() if price is not None)
 
     if not ingredients:
         return (prices, 0, scrape_count)
@@ -63,10 +61,14 @@ def seed_ingredients(recipes: list[dict]) -> tuple[dict[str, float | None], int,
         now = datetime.now()
         for name in ingredients:
             if name in existing:
-                existing[name].price = prices[name]
+                existing[name].price = prices.get(name)
                 existing[name].last_scraped = now
             else:
-                row = Ingredient(name=name, price=prices[name], last_scraped=now)
+                row = Ingredient(
+                    name=name,
+                    price=prices.get(name),
+                    last_scraped=now,
+                )
                 session.add(row)
                 existing[name] = row
 
@@ -85,7 +87,7 @@ def seed_ingredients(recipes: list[dict]) -> tuple[dict[str, float | None], int,
                 continue
 
             measures = recipe.get("measures") or []
-            seen = set()  ## a recipe can list the same ingredient twice
+            seen = set()  ## same canonical name can appear twice after normalization
             for i, name in enumerate(get_ingredients(recipe)):
                 if name in seen:
                     continue

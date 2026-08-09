@@ -69,9 +69,9 @@ function HomePage() {
             color="yellow"
             width="4.5rem"
             className="home-how__tape"
-            style={{ top: 0, left: '50%', transform: 'translateX(-50%)' }}
+            style={{ top: 0, left: '50%', transform: 'translateX(-50%)'  }}
           />
-          <h2 id="how-heading" className="headline-lg">
+          <h2 id="how-heading" className="headline-lg" >
             How it works
           </h2>
         </div>
