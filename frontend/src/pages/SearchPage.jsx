@@ -44,7 +44,7 @@ function SearchPage() {
       } catch (err) {
         if (!cancelled) {
           setRecipes([])
-          setError(err.message || 'Could not load recipes.')
+          setError('Could not load recipes.')
         }
       } finally {
         if (!cancelled) setLoading(false)
@@ -87,7 +87,7 @@ function SearchPage() {
 
         {loading ? <LoadingState /> : null}
         {error ? (
-          <EmptyState title="Something went wrong" message={error} icon="error" />
+          <EmptyState title="Something went wrong" message={"Server Error"} icon="error" />
         ) : null}
         {!loading && !error && recipes.length === 0 ? (
           <EmptyState

@@ -4,6 +4,67 @@
   gap: 3.5rem;
 }
 
+.home-db-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  background: var(--error-container, #ffdad6);
+  color: var(--on-error-container, #93000a);
+  border: 1px solid rgba(186, 26, 26, 0.25);
+  box-shadow: var(--shadow-note);
+  animation: banner-in 0.35s ease both;
+}
+
+.home-db-banner > .material-symbols-outlined {
+  flex: 0 0 auto;
+  font-size: 1.5rem;
+  margin-top: 0.1rem;
+}
+
+.home-db-banner__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.home-db-banner__title {
+  margin: 0 0 0.25rem;
+  color: inherit;
+}
+
+.home-db-banner__text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.home-db-banner__dismiss {
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0.15rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+.home-db-banner__dismiss:hover {
+  opacity: 1;
+}
+
+@keyframes banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .home-hero {
   display: grid;
   gap: 2rem;

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import MatchBadge from '../ui/MatchBadge.jsx'
 import StickyButton from '../ui/StickyButton.jsx'
 import WashiTape from '../ui/WashiTape.jsx'
@@ -24,6 +25,7 @@ function RecipeCard({ recipe, index = 0, onSelect }) {
   const tapeColor = TAPES[index % TAPES.length]
   const ingredientCount = recipe.ingredients?.length ?? 0
   const score = recipe.score
+  const href = `/recipe/${recipe.id}`
 
   return (
     <article className={`recipe-card paper ${tilt}`}>
@@ -42,7 +44,11 @@ function RecipeCard({ recipe, index = 0, onSelect }) {
           </div>
         )}
       </div>
-      <h3 className="recipe-card__title">{recipe.name}</h3>
+      <h3 className="recipe-card__title">
+        <Link to={href} className="recipe-card__title-link">
+          {recipe.name}
+        </Link>
+      </h3>
       <p className="recipe-card__preview">{previewText(recipe.instructions)}</p>
       {recipe.match_type ? <MatchBadge matchType={recipe.match_type} /> : null}
       {score ? (

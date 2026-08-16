@@ -7,6 +7,15 @@ from sqlalchemy import select
 MEALDB_API = "https://www.themealdb.com/api/json/v1/1/"
 
 
+def filter_instructions(instructions: str) -> str:
+    """Filter instructions to remove newlines followed by a number."""
+    steps = instructions.split("\n")
+    for step in steps:
+        if step.strip().isdigit() or step.strip().removesuffix(".").isdigit():  ## remove trailing periods if present
+            steps.remove(step)
+    
+    return "\n".join(steps)
+
 def contains_n_ingredients(recipe: dict, n: int) -> bool:
     """Check if a recipe has at least n ingredients."""
     count = 0
@@ -46,7 +55,7 @@ def filter_recipes(recipes: dict[str, dict]) -> list[dict]:
                 "id": key,
                 "name": value.get("strMeal") or "",
                 "ingredients": [value.get(f"strIngredient{i}") for i in range(1, 21) if value.get(f"strIngredient{i}")],
-                "instructions": value.get("strInstructions") or "",
+                "instructions": filter_instructions(value.get("strInstructions") or ""),
                 "image": value.get("strMealThumb") or "",
                 ## kept index-aligned with ingredients so measures pair correctly
                 "measures": [value.get(f"strMeasure{i}") for i in range(1, 21) if value.get(f"strIngredient{i}")]

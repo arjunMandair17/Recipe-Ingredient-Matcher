@@ -1,6 +1,6 @@
 import time
 
-from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, select
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
@@ -70,8 +70,12 @@ async def health_check() -> dict:
             "num_recipes": recipes,
             "num_ingredients": ingredients,
         }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error checking health: {str(e)}")
+    except Exception:
+        return {
+            "status": "error",
+            "num_recipes": "error",
+            "num_ingredients": "error",
+        }
 
 
 app.include_router(recipes_router)

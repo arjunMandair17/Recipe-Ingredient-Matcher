@@ -15,6 +15,7 @@ class IngredientResponse(BaseModel):
     name: str
     price: float | None
     last_scraped: datetime | None = None
+    measure: str | None = None
 
 
 class RecipeRequest(BaseModel):

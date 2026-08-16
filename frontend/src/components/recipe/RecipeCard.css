@@ -55,6 +55,18 @@
   overflow: hidden;
 }
 
+.recipe-card__title-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.15s ease, color 0.15s ease;
+}
+
+.recipe-card__title-link:hover {
+  text-decoration-color: var(--primary);
+  color: var(--primary-container);
+}
+
 .recipe-card__preview {
   margin: 0;
   color: var(--on-surface-variant);

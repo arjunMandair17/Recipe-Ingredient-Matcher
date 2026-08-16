@@ -25,18 +25,18 @@ def build_recipe_responses(session: Session, recipes: list[Recipe]) -> list[Reci
     # One query: all (recipe_id, Ingredient) pairs for the given recipes,
     # joined through recipe_ingredients on ingredient_id.
     rows = session.execute(
-        select(RecipeIngredient.recipe_id, Ingredient)
+        select(RecipeIngredient.recipe_id, Ingredient, RecipeIngredient.measure)
         .join(Ingredient, Ingredient.id == RecipeIngredient.ingredient_id)
         .where(RecipeIngredient.recipe_id.in_(recipe_ids))
         .order_by(Ingredient.name)
     ).all()
 
     # Group those ingredients under each recipe_id for O(1) lookup below.
-    ingredients_by_recipe: dict[int, list[Ingredient]] = {
+    ingredients_by_recipe: dict[int, list[tuple[Ingredient, str | None]]] = {
         recipe_id: [] for recipe_id in recipe_ids
     }
-    for recipe_id, ingredient in rows:
-        ingredients_by_recipe[recipe_id].append(ingredient)
+    for recipe_id, ingredient, measure in rows:
+        ingredients_by_recipe[recipe_id].append((ingredient, measure))
 
     # Build one RecipeResponse per recipe, nesting its IngredientResponses.
     return [
@@ -46,8 +46,10 @@ def build_recipe_responses(session: Session, recipes: list[Recipe]) -> list[Reci
             image_url=recipe.image_url,
             instructions=recipe.instructions,
             ingredients=[
-                IngredientResponse.model_validate(ingredient)
-                for ingredient in ingredients_by_recipe[recipe.id]
+                IngredientResponse.model_validate(ingredient).model_copy(
+                    update={"measure": measure}
+                )
+                for ingredient, measure in ingredients_by_recipe[recipe.id]
             ],
         )
         for recipe in recipes
@@ -118,7 +120,7 @@ async def get_recipes(
 
 @recipes_router.get("/{recipe_id}/ingredients", response_model=list[IngredientResponse])
 async def get_recipe_ingredients(recipe_id: int) -> list[IngredientResponse]:
-    """Return ingredients for a recipe. 404 only if the recipe itself is missing."""
+    """Return ingredients for a recipe, including per-recipe measures."""
     try:
         with get_session() as session:
             recipe = session.scalars(
@@ -127,13 +129,18 @@ async def get_recipe_ingredients(recipe_id: int) -> list[IngredientResponse]:
             if not recipe:
                 raise HTTPException(status_code=404, detail="Recipe not found")
 
-            ingredients = session.scalars(
-                select(Ingredient)
-                .join(RecipeIngredient)
+            rows = session.execute(
+                select(Ingredient, RecipeIngredient.measure)
+                .join(RecipeIngredient, RecipeIngredient.ingredient_id == Ingredient.id)
                 .where(RecipeIngredient.recipe_id == recipe_id)
                 .order_by(Ingredient.name)
             ).all()
-            return [IngredientResponse.model_validate(row) for row in ingredients]
+            return [
+                IngredientResponse.model_validate(ingredient).model_copy(
+                    update={"measure": measure}
+                )
+                for ingredient, measure in rows
+            ]
     except HTTPException:
         raise
     except Exception as e:

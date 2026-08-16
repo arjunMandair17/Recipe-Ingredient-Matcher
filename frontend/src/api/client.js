@@ -73,6 +73,13 @@ export function fetchIngredients({ name, limit = 50, offset = 0 } = {}) {
 }
 
 /**
+ * Fetch a single ingredient by id.
+ */
+export function fetchIngredient(ingredientId) {
+  return request(`/ingredients/${ingredientId}`)
+}
+
+/**
  * Fetch API health (recipe and ingredient counts).
  */
 export function fetchHealth() {

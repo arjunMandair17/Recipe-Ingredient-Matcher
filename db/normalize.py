@@ -13,7 +13,9 @@ ADJECTIVES = {
 
 ## words that will slip through adjective filtering due to specificity, and must be mapped correctly
 ALIASES = { 
-    "frozen prawn": "prawn", "banana": "banana fruit", "hummu": "hummus",
+    "frozen prawn": "prawn", "banana": "banana fruit", "hummu": "hummus", "coriander": "cilantro", 
+    "green olive": "green olive slice", "coriander leave": "cilantro leave", "yoghurt": "yogurt",
+    "natural yoghurt": "yogurt"
     }
 
 ## words to never expand on during matching

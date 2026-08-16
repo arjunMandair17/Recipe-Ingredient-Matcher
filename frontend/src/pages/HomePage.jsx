@@ -1,20 +1,84 @@
 import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import PaperCard from '../components/ui/PaperCard.jsx'
 import StickyButton from '../components/ui/StickyButton.jsx'
 import WashiTape from '../components/ui/WashiTape.jsx'
+import { fetchHealth } from '../api/client.js'
 import './HomePage.css'
 
 const HERO_IMAGE =
   'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=1200&q=80'
 
 /**
+ * True when /health reports a DB problem or the request itself fails.
+ */
+function isDatabaseDown(health) {
+  if (!health) return true
+  return (
+    health.status === 'error' ||
+    health.num_recipes === 'error' ||
+    health.num_ingredients === 'error'
+  )
+}
+
+/**
  * Landing page: brand-forward hero and links into the two search flows.
  */
 function HomePage() {
   const navigate = useNavigate()
+  const [dbErrorVisible, setDbErrorVisible] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+
+    /**
+     * Probe /health and show the DB-down banner when the database is unreachable.
+     */
+    async function checkHealth() {
+      try {
+        const health = await fetchHealth()
+        if (!cancelled && isDatabaseDown(health)) {
+          setDbErrorVisible(true)
+        }
+      } catch {
+        if (!cancelled) setDbErrorVisible(true)
+      }
+    }
+
+    checkHealth()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <div className="home-page">
+      {dbErrorVisible ? (
+        <div className="home-db-banner" role="alert">
+          <span className="material-symbols-outlined" aria-hidden="true">
+            cloud_off
+          </span>
+          <div className="home-db-banner__copy">
+            <p className="home-db-banner__title label">Database unavailable</p>
+            <p className="home-db-banner__text">
+              The recipe database is currently down — this may be maintenance or
+              an unexpected error. Recipe search and ingredient matching may not
+              work until it&apos;s back.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="home-db-banner__dismiss"
+            onClick={() => setDbErrorVisible(false)}
+            aria-label="Dismiss database warning"
+          >
+            <span className="material-symbols-outlined" aria-hidden="true">
+              close
+            </span>
+          </button>
+        </div>
+      ) : null}
+
       <section className="home-hero">
         <div className="home-hero__copy">
           <PaperCard
@@ -69,9 +133,9 @@ function HomePage() {
             color="yellow"
             width="4.5rem"
             className="home-how__tape"
-            style={{ top: 0, left: '50%', transform: 'translateX(-50%)'  }}
+            style={{ top: 0, left: '50%', transform: 'translateX(-50%)' }}
           />
-          <h2 id="how-heading" className="headline-lg" >
+          <h2 id="how-heading" className="headline-lg">
             How it works
           </h2>
         </div>
