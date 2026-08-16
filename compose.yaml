@@ -1,5 +1,6 @@
 services:
 
+  ## initialize database image
   db:
     image: postgres:16
     environment:
@@ -10,7 +11,74 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
+  ## initialize tables
+  tables_init:
+    build: 
+      context: .
+      dockerfile: Dockerfile.python
+    env_file: .env
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    command: python -m db.sql_init
+    restart: "no"
+
+  ## start seed script
+  populate_tables:
+    build: 
+      context: .
+      dockerfile: Dockerfile.python
+    env_file: .env
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      tables_init:
+        condition: service_completed_successfully
+    command: python -m db_job.seed_job
+    restart: "no"
+
+  ## start backend server
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.python
+    env_file: .env
+    ports:
+      - 8000:8000
+    environment:
+      POSTGRES_HOST: db
+    depends_on:
+      populate_tables:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+    command: uvicorn backend.server:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
+
+  ## start frontend server
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile.frontend
+    env_file: .env
+    ports:
+      - 5173:5173
+    environment:
+      VITE_API_BASE: http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+    
 
 volumes:
   db_data: 

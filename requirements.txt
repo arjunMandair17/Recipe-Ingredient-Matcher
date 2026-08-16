@@ -1,9 +1,9 @@
-- sqlalchemy
-- sqlalchemy-utils
-- fastapi
-- uvicorn
-- python-dotenv
-- psycopg[binary]
-- playwright
-- requests
-- alembic
+sqlalchemy
+sqlalchemy-utils
+fastapi
+uvicorn
+python-dotenv
+psycopg[binary]
+playwright
+requests
+alembic

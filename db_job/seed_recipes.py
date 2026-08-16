@@ -11,7 +11,7 @@ def filter_instructions(instructions: str) -> str:
     """Filter instructions to remove newlines followed by a number."""
     steps = instructions.split("\n")
     for step in steps:
-        if step.strip().isdigit() or step.strip().removesuffix(".").isdigit():  ## remove trailing periods if present
+        if step.strip().isdigit() or step.strip().lower() == "instructions" or step.strip().removesuffix(".").isdigit() or step.strip().lower().startswith("step"):  ## remove trailing periods if present
             steps.remove(step)
     
     return "\n".join(steps)

@@ -1,0 +1,32 @@
+# Git / IDE
+.git
+.gitignore
+.cursor
+.vscode
+*.md
+
+# Secrets — use compose env_file / runtime env instead
+.env
+.env.*
+
+# Python junk
+.venv
+venv
+__pycache__
+**/__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+*.egg-info
+
+# Frontend (not used by Dockerfile.python; Node image should npm ci itself)
+frontend/node_modules
+frontend/dist
+frontend/.vite
+
+# Design refs / local-only
+stitch
+
+# Misc
+test_script.py
+**/terminals
