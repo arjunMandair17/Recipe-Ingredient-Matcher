@@ -9,7 +9,7 @@ from db.db_models import Base
 
 load_dotenv()
 
-DATABASE_URL = (
+DATABASE_URL = os.getenv("DB_URL") if os.getenv("ENV") == "prod" else (
     f"postgresql+psycopg://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}"
     f"@{os.getenv('POSTGRES_HOST', 'localhost')}:{os.getenv('POSTGRES_PORT', '5432')}"
     f"/{os.getenv('POSTGRES_DB')}"

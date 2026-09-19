@@ -1,5 +1,5 @@
 import time
-
+import os
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, select
@@ -45,12 +45,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:4173",
-        "http://127.0.0.1:4173",
-    ],
+    allow_origins=[os.getenv("FRONTEND_URL_LOCAL"), os.getenv("BACKEND_URL_LOCAL") if os.getenv("ENV") == "local" else os.getenv("FRONTEND_URL_PROD"), os.getenv("BACKEND_URL_PROD") if os.getenv("ENV") == "prod" else None],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

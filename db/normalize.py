@@ -25,7 +25,7 @@ DENYLIST = {
     "all purpose", "essence", "extract", "flour", "baked", "baby", "new", "fillet",
     "bean", "cutlet", "sprout", "gravy", "tenderloin", "jam", "roll", "sugar", "wheat",
     "leave", "nut", "leg", "flake", "roast", "stick", "cream", "red", "king", "green",
-    "yellow", "white", "black", "purple", "orange", "brown", "blue", "gold", 
+    "yellow", "white", "black", "purple", "orange", "brown", "blue", "gold", "stock"
 }
 
 
